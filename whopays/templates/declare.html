@@ -82,7 +82,7 @@
             {{ PharmaBenefits.management_form }}
             {% for f in PharmaBenefits %}
               <hr />
-              <div class="row">
+              <div class="row pharma-form" >
                 {{ f|bootstrap_horizontal }}
               </div>
             {% endfor %}
@@ -105,7 +105,7 @@
             {{ OtherMedicalBenefits.management_form }}
             {% for f in OtherMedicalBenefits %}
               <hr />
-              <div class="row">
+              <div class="row othermedical-form">
                 {{ f|bootstrap_horizontal }}
               </div>
             {% endfor %}
@@ -126,7 +126,7 @@
             {{ FeeBenefits.management_form }}
             {% for f in FeeBenefits %}
               <hr />
-              <div class="row">
+              <div class="row feebenefits-form">
                 {{ f|bootstrap_horizontal }}
               </div>
             {% endfor %}
@@ -147,7 +147,7 @@
             {{ GrantBenefits.management_form }}
             {% for f in GrantBenefits %}
               <hr />
-              <div class="row">
+              <div class="row grantbenefits-form">
                 {{ f|bootstrap_horizontal }}
               </div>
             {% endfor %}
@@ -218,11 +218,17 @@
 {% endblock %}
 
 {% block extrajs %}
+  <script type="text/javascript" src="/static/jquery.formset.js"></script>
   <script type="text/javascript">
     $(document).ready(function(){
     $('input[type=radio]').change( function() {
     $('#declarations').toggle();
     });
+
+    $('.pharma-form').formset({prefix:'{{PharmaBenefits.prefix}}', addCssClass: 'btn btn-default'});
+    $('.othermedical-form').formset({prefix:'{{OtherMedicalBenefits.prefix}}', addCssClass: 'btn btn-default'});
+    $('.feebenefits-form').formset({prefix:'{{FeeBenefits.prefix}}', addCssClass: 'btn btn-default'});
+    $('.grantbenefits-form').formset({prefix:'{{GrantBenefits.prefix}}', addCssClass: 'btn btn-default'});
     });
   </script>
 
