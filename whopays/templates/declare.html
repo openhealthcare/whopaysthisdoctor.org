@@ -1,0 +1,229 @@
+{% extends 'baser.html' %}
+{% load bootstrap %}
+
+{% block content %}
+
+  <form method="POST" role="form">
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <hr>
+          <h2 class="intro-text text-center">Declare your interests</h2>
+          <hr />
+          <p>
+            You are able to use this form to declare any financial interests in the last 12 months, or since your last
+            declaration, relating to income received outside the bounds of usual clinical work. If in doubt, it is
+            always best to declare income.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <hr />
+          <h2 class="intro-text text-center">Section 1: Identifying information</h2>
+          <hr>
+          {{ form.errors }}
+          <div class="row">
+            {{ form|bootstrap_horizontal }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <hr />
+          <h2 class="intro-text text-center">Section 2: Declaration</h2>
+          <hr>
+          <p>
+            Please include the personal receipt of any benefits from a pharmaceutical company. This might include speaker’s fees, honoraria, expenses or any significant gifts or payments in kind.
+          </p>
+          <div class="row">
+            <div class="form-group">
+              <label class="control-label col-sm-2 col-lg-2 ">Do you have any Financial Interests to declare?</label>
+              <div class=" col-sm-10 col-lg-10 ">
+                <div class="radio-inline">
+                  <label class="radio-inline">
+                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                    Yes
+                  </label>
+                </div>
+                <div class="radio-inline">
+                  <label class="radio-inline">
+                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                    No
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="declarations">
+
+      <div class="row">
+        <div class="box">
+          <div class="col-lg-12">
+            <hr />
+            <h2 class="intro-text text-center">Section 3: Benefits received from pharmaceutical companies</h2>
+            {% if PharmaBenefits.errors or PharmaBenefits.non_form_errors %}
+              {{ PharmaBenefits.errors }}
+              {{ PharmaBenefits.non_form_errors }}
+            {% endif %}
+            {{ PharmaBenefits.management_form }}
+            {% for f in PharmaBenefits %}
+              <hr />
+              <div class="row">
+                {{ f|bootstrap_horizontal }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="box">
+          <div class="col-lg-12">
+            <hr />
+            <h2 class="intro-text text-center">Section 4: Other sources of income or benefits from other organisations relevant to
+              medical practice</h2>
+              <hr />
+            <p>
+              Please include any fees or benefits, similar to in Section 3, received from companies directly involved in
+              healthcare. For instance, this might include manufacturers of medical devices, diagnostic technology, or health-
+              related Public Relations companies.
+            </p>
+            {{ OtherMedicalBenefits.management_form }}
+            {% for f in OtherMedicalBenefits %}
+              <hr />
+              <div class="row">
+                {{ f|bootstrap_horizontal }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="box">
+          <div class="col-lg-12">
+            <hr />
+            <h2 class="intro-text text-center">Section 5: Other financial interests that might be of relevance</h2>
+            <hr />
+            <p>
+              This might include employment or sources of income other than your main employer given in section 1, for
+              example, shares in companies, patents, a role in a private medical company, or media related work.
+            </p>
+            {{ FeeBenefits.management_form }}
+            {% for f in FeeBenefits %}
+              <hr />
+              <div class="row">
+                {{ f|bootstrap_horizontal }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="box">
+          <div class="col-lg-12">
+            <hr />
+            <h2 class="intro-text text-center">Section 6:  Research grants paid by private institutions to your department</h2>
+            <hr />
+            <p>
+              This section only relates to research grants received where you have direct involvement in the work related to the
+              receipt of funds paid to your department.
+            </p>
+            {{ GrantBenefits.management_form }}
+            {% for f in GrantBenefits %}
+              <hr />
+              <div class="row">
+                {{ f|bootstrap_horizontal }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Declarations are slightly weird. -->
+      {% if Declaration.errors or Declaration.non_form_errors %}
+        {{ Declaration.errors }}
+        {{ Declaration.non_form_errors }}
+      {% endif %}
+      {{ Declaration.management_form }}
+      {% for f in Declaration %}
+        {% if forloop.first %}
+          <div class="row">
+            <div class="box">
+              <div class="col-lg-12">
+                <hr />
+                <h2 class="intro-text text-center">Section 7: Past Declarations</h2>
+                <hr>
+                <p>
+                  If this is one of your first annual declarations, you may wish to other recent declarations of interest. General
+                  opinion is that interests in the previous 3-5 years should be declared.
+                </p>
+                <div class="row">
+                  {{ f.past_declarations|bootstrap_horizontal }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="box">
+              <div class="col-lg-12">
+                <hr />
+                <h2 class="intro-text text-center">Section 8: Other Declarations</h2>
+                <hr>
+                <p>
+                  This section is simply to provide space for any other declaration you may wish to make.
+                </p>
+                <div class="row">
+                  {{ f.other_declarations|bootstrap_horizontal }}
+                </div>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+
+    </div><!--declarations-->
+
+
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <center>
+            <button class="btn btn-default" type="submit">Make my declaration</button>
+          </center>
+          <hr />
+        </div>
+      </div>
+    </div>
+
+
+  </form>
+
+{% endblock %}
+
+{% block extrajs %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+    $('input[type=radio]').change( function() {
+    $('#declarations').toggle();
+    });
+    });
+  </script>
+
+{% endblock %}

@@ -1,0 +1,6 @@
+*.sqlite
+*.pyc
+static/*
+.coverage
+htmlcov
+*local_settings.py

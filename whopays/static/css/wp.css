@@ -1,0 +1,11 @@
+body { background: url(http://666a658c624a3c03a6b2-25cda059d975d2f318c03e90bcf17c40.r92.cf1.rackcdn.com/unsplash_52a4c3446e23d_1.JPG)  no-repeat center center fixed;}
+
+.col-lg-12 {
+    float: none;
+}
+
+li {
+  font-size: 1.25em;
+  line-height: 1.6;
+  color: #000;
+}
