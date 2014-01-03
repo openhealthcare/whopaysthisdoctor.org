@@ -12,3 +12,4 @@ gunicorn==18.0
 letter==0.4.2
 six==1.4.1
 wsgiref==0.1.2
+psycopg2
