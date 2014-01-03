@@ -9,3 +9,10 @@ li {
   line-height: 1.6;
   color: #000;
 }
+
+.hidden {
+    display: none;
+}
+.larger {
+  font-size: 2em;
+}

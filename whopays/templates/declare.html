@@ -52,13 +52,13 @@
                 <div class="radio-inline">
                   <label class="radio-inline">
                     <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-                    Yes
+                    <span class="larger">Yes</span>
                   </label>
                 </div>
                 <div class="radio-inline">
                   <label class="radio-inline">
                     <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                    No
+                    <span class="larger">No</span>
                   </label>
                 </div>
               </div>
@@ -68,7 +68,7 @@
       </div>
     </div>
 
-    <div id="declarations">
+    <div id="declarations" class="hidden">
 
       <div class="row">
         <div class="box">
@@ -222,7 +222,7 @@
   <script type="text/javascript">
     $(document).ready(function(){
     $('input[type=radio]').change( function() {
-    $('#declarations').toggle();
+    $('#declarations').toggleClass('hidden');
     });
 
     $('.pharma-form').formset({prefix:'{{PharmaBenefits.prefix}}', addCssClass: 'btn btn-default'});
