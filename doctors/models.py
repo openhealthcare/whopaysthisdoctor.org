@@ -13,16 +13,21 @@ class Doctor(models.Model):
     primary_employer = models.CharField(max_length=200)
     employment_address = models.TextField()
 
+    def __unicode__(self):
+        return u'{0} - {1}'.format(self.name, self.gmc_number)
+
     def get_absolute_url(self):
         return reverse('doctor-detail', kwargs={'pk': self.pk})
 
 class Declaration(models.Model):
     doctor = models.ForeignKey(Doctor)
-    interests = models.BooleanField(default=True)
+    interests = models.BooleanField(default=False)
     past_declarations = models.TextField(blank=True, null=True)
     other_declarations = models.TextField(blank=True, null=True)
     date_created = models.DateField(default=lambda: dt.date.today())
 
+    def __unicode__(self):
+        return u'{0} - {1}'.format(self.doctor, self.date_created)
 
 class Benefit(models.Model):
     class Meta:

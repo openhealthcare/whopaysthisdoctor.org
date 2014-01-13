@@ -14,3 +14,4 @@ six==1.4.1
 wsgiref==0.1.2
 psycopg2
 dj_static
+django-reversion==1.8.0

@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'bootstrapform',
+    'reversion',
     'south',
     'doctors'
 )
