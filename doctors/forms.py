@@ -4,6 +4,7 @@ Forms for Who Pays This Doctor
 import datetime
 
 from django import forms
+from django.conf import settings
 from django.forms import widgets
 from django.forms.models import ModelForm
 
@@ -12,9 +13,8 @@ from doctors.models import DeclarationLink, Doctor
 class NHSEmailField(forms.EmailField):
     def validate(self, value):
         super(NHSEmailField, self).validate(value)
-        suffixes = ['nhs.net', 'nhs.uk', 'ac.uk', 'doctors.org.uk', 'deadpansincerity.com', 'msmith.net']
-        if not any(value.endswith(x) for x in suffixes):
-            raise forms.ValidationError('Email must end in one of {0}'.format(', '.join(suffixes)))
+        if not any(value.endswith(x) for x in settings.ALL_SUFFIXES):
+            raise forms.ValidationError('Email must end in one of {0}'.format(', '.join(settings.NHS_EMAIL_SUFFIXES)))
 
 class DoctorForm(ModelForm):
     class Meta:
