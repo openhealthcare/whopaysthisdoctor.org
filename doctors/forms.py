@@ -12,7 +12,7 @@ from doctors.models import DeclarationLink, Doctor
 class NHSEmailField(forms.EmailField):
     def validate(self, value):
         super(NHSEmailField, self).validate(value)
-        suffixes = ['nhs.uk', 'ac.uk', 'doctors.org.uk', 'deadpansincerity.com']
+        suffixes = ['nhs.uk', 'ac.uk', 'doctors.org.uk', 'deadpansincerity.com', 'msmith.net']
         if not any(value.endswith(x) for x in suffixes):
             raise forms.ValidationError('Email must end in one of {0}'.format(', '.join(suffixes)))
 
