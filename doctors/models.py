@@ -27,9 +27,21 @@ class Declaration(models.Model):
     date_created = models.DateField(default=lambda: dt.date.today())
 
     def __unicode__(self):
-        return u'{0} - {1}'.format(self.doctor, self.date_created)
+        return u'{0} - {1}'.format(getattr(self, 'doctor', 'Declaration'),
+                                           self.date_created)
 
 class Benefit(models.Model):
+    BAND_CHOICES = (
+        (1, u'under \u00a3100'),
+        (2, u'\u00a3100- \u00a31000'),
+        (3, u'\u00a31000- \u00a32000'),
+        (4, u'\u00a32000 - \u00a35000'),
+        (5, u'\u00a35000 - \u00a310000'),
+        (6, u'\u00a310000 - \u00a350 000'),
+        (7, u'\u00a350000- \u00a3100000'),
+        (8, u'\u00a3100000+')
+    )
+
     class Meta:
         abstract = True
 
@@ -37,7 +49,7 @@ class Benefit(models.Model):
     declaration = models.ForeignKey(Declaration, blank=True, null=True)
     company = models.CharField(max_length=200)
     reason = models.CharField(max_length=200)
-    amount = models.FloatField()
+    band = models.IntegerField(choices=BAND_CHOICES)
 
 class PharmaBenefit(Benefit): pass
 class OtherMedicalBenefit(Benefit): pass

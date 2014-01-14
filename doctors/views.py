@@ -89,8 +89,12 @@ class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
             formset.save()
         for formset in inlines:
             if formset.model == models.Declaration:
-                self.declaration = formset.new_objects[0]
-                print self.declaration, self.declaration.pk
+                try:
+                    self.declaration = formset.new_objects[0]
+                    print self.declaration, self.declaration.pk
+                except IndexError:
+                    self.declaration = models.Declaration(doctor=self.object)
+                    self.declaration.save()
 
         for formset in inlines:
             for benefit in formset.new_objects:
@@ -132,8 +136,12 @@ class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
             formset.save()
         for formset in inlines:
             if formset.model == models.Declaration:
-                self.declaration = formset.new_objects[0]
-                print self.declaration, self.declaration.pk
+                try:
+                    self.declaration = formset.new_objects[0]
+                    print self.declaration, self.declaration.pk
+                except IndexError:
+                    self.declaration = models.Declaration(doctor=self.object)
+                    self.declaration.save()
 
         for formset in inlines:
             for benefit in formset.new_objects:
