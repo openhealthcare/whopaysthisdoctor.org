@@ -170,6 +170,10 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
 
+NHS_EMAIL_SUFFIXES = ['nhs.net', 'nhs.uk', 'ac.uk', 'doctors.org.uk']
+ADMIN_SUFFIXES = ['openhealthcare.org.uk', 'deadpansincerity.com', 'msmith.net']
+ALL_SUFFIXES = NHS_EMAIL_SUFFIXES + ADMIN_SUFFIXES
+
 try:
     from local_settings import *
 except:

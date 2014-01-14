@@ -77,7 +77,7 @@ def in_one_day():
 class DeclarationLink(models.Model):
     email = models.EmailField(unique=True)
     expires = models.DateTimeField(default=in_one_day)
-    key = models.CharField(max_length=64, unique=True, default=lambda: random_token())
+    key = models.CharField(max_length=64, unique=True, default=lambda: random_token()[:8])
 
     def absolute_url(self):
         return 'http://{0}/declare/{1}'.format(settings.DEFAULT_DOMAIN, self.key)
@@ -100,6 +100,6 @@ class DeclarationLink(models.Model):
         Message.send()
 
     def new_key(self):
-        self.key = random_token()
+        self.key = random_token()[:8]
         self.save()
         return
