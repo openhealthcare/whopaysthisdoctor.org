@@ -25,5 +25,9 @@ class DeclarationAdmin(reversion.VersionAdmin):
     inlines = (PharmaBenefitInline, OtherMedicalBenefitInline,
                FeeBenefitInline, GrantBenefitInline)
 
+class DeclarationLinkAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(models.Doctor, DoctorAdmin)
 admin.site.register(models.Declaration, DeclarationAdmin)
+admin.site.register(models.DeclarationLink, DeclarationLinkAdmin)

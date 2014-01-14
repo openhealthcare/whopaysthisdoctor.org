@@ -2,9 +2,15 @@
 Models for Who Pays This Doctor.
 """
 import datetime as dt
+import hashlib
+import random
 
-from django.core.urlresolvers import reverse
+from django.conf import settings
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import models
+import letter
+
+POSTIE = letter.DjangoPostman()
 
 class Doctor(models.Model):
     name = models.CharField(max_length=200)
@@ -12,6 +18,7 @@ class Doctor(models.Model):
     job_title = models.CharField(max_length=200)
     primary_employer = models.CharField(max_length=200)
     employment_address = models.TextField()
+    email = models.EmailField(blank=True, null=True)
 
     def __unicode__(self):
         return u'{0} - {1}'.format(self.name, self.gmc_number)
@@ -55,3 +62,44 @@ class PharmaBenefit(Benefit): pass
 class OtherMedicalBenefit(Benefit): pass
 class FeeBenefit(Benefit): pass
 class GrantBenefit(Benefit): pass
+
+def random_token(extra=None, hash_func=hashlib.sha256):
+    if extra is None:
+        extra = []
+    bits = extra + [str(random.SystemRandom().getrandbits(512))]
+    return hash_func("".join(bits).encode('utf-8')).hexdigest()
+
+def in_one_day():
+    now = dt.datetime.now()
+    then = now + dt.timedelta(days=1)
+    return then
+
+class DeclarationLink(models.Model):
+    email = models.EmailField(unique=True)
+    expires = models.DateTimeField(default=in_one_day)
+    key = models.CharField(max_length=64, unique=True, default=lambda: random_token())
+
+    def absolute_url(self):
+        return 'http://{0}/declare/{1}'.format(settings.DEFAULT_DOMAIN, self.key)
+
+    def send(self):
+        """
+        Send the link to this email.
+        """
+        class Message(letter.Letter):
+            Postie   = POSTIE
+
+            From     = settings.DEFAULT_FROM_EMAIL
+            To       = self.email
+            Subject  = 'Who Pays This Doctor - Edit your public record'
+            Template = 'email/edit_public_record'
+            Context  = {
+                'link'       : self,
+                }
+
+        Message.send()
+
+    def new_key(self):
+        self.key = random_token()
+        self.save()
+        return
