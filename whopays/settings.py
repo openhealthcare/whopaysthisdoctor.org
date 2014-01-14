@@ -6,7 +6,7 @@ import ffs
 
 ROOT = ffs.Path.here()
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
