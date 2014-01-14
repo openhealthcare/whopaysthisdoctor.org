@@ -164,15 +164,11 @@ DEFAULT_FROM_EMAIL = 'hello@openhealthcare.org.uk'
 DEFAULT_DOMAIN = 'whopaysthisdoctor.org'
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
-if not DEBUG:
-    EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
-    EMAIL_HOST= 'smtp.sendgrid.net'
-    EMAIL_PORT = 587
-    EMAIL_USE_TLS = True
-    EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
-else:
-    EMAIL_PORT = 25
-    EMAIL_HOST = 'localhost'
+EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
+EMAIL_HOST= 'smtp.sendgrid.net'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
 
 try:
     from local_settings import *
