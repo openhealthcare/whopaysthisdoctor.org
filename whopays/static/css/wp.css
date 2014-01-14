@@ -17,6 +17,6 @@ li {
   font-size: 2em;
 }
 
-h1.a {
+.brand a, .address-bar a {
 	color: white;
 }
