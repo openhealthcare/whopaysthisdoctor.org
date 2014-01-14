@@ -16,3 +16,7 @@ li {
 .larger {
   font-size: 2em;
 }
+
+h1.a {
+	color: white;
+}
