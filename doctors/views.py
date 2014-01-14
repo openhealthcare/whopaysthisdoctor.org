@@ -1,12 +1,56 @@
 """
 Views relating to the register.
 """
-from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse_lazy, reverse
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import get_object_or_404, redirect
+from django.utils import timezone
 from django.views.generic import ListView, DetailView
+from django.views.generic.edit import FormView
 from extra_views import CreateWithInlinesView, InlineFormSet, UpdateWithInlinesView
 from extra_views import NamedFormsetsMixin
 
 from doctors import models, forms
+
+class EstablishIdentityView(FormView):
+    """
+    View to establish the identity of a user so they can
+    edit their public record.
+    """
+    template_name='establish_identity.html'
+    form_class = forms.IdentityForm
+    success_url = '/declare/pending'
+
+    def form_valid(self, form):
+        form.create_declaration_link()
+        return super(EstablishIdentityView, self).form_valid(form)
+
+class ReEstablishIdentityView(FormView):
+    """
+    View to reestablish the identity of a user so they can
+    edit their public record.
+    """
+    template_name='re_establish_identity.html'
+    form_class = forms.ReEstablishIdentityForm
+    success_url = reverse_lazy('re-establish-identity-pending')
+
+    def dispatch(self, *args, **kwargs):
+        self.doctor = get_object_or_404(models.Doctor, pk=kwargs['pk'])
+        return super(ReEstablishIdentityView, self).dispatch(*args, **kwargs)
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(ReEstablishIdentityView, self).get_context_data(*args, **kwargs)
+        context['doctor'] = self.doctor
+        return context
+
+    def get_initial(self):
+        print self.doctor
+        return {'gmc': self.doctor.gmc_number}
+
+    def form_valid(self, form):
+        form.create_declaration_link()
+        return super(ReEstablishIdentityView, self).form_valid(form)
+
 
 class DeclarationInline(InlineFormSet):
     model = models.Declaration
@@ -65,6 +109,8 @@ class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
     """
     template_name = 'declare.html'
     model = models.Doctor
+    form_class = forms.DoctorForm
+
     inlines = [
         DeclarationInline,
         PharmaBenefitInline,
@@ -80,11 +126,25 @@ class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
         'GrantBenefits'
         ]
 
+    def dispatch(self, *args, **kwargs):
+        link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
+        if link.expires < timezone.now():
+            raise Http404
+        doctor = models.Doctor.objects.filter(email=link.email).count()
+        if doctor > 0:
+            kwargs['pk'] = models.Doctor.objects.get(email=link.email).pk
+            return redirect(reverse('add', kwargs=kwargs))
+        self.link = link
+        return super(DeclareView, self).dispatch(*args, **kwargs)
+
     def forms_valid(self, form, inlines):
         """
         If the form and formsets are valid, save the associated models.
         """
         self.object = form.save()
+        self.object.email = self.link.email
+        self.object.save()
+
         for formset in inlines:
             formset.save()
         for formset in inlines:
@@ -102,6 +162,8 @@ class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
                 benefit.declaration = self.declaration
                 benefit.save()
                 print benefit.declaration, self.declaration
+
+        self.link.delete()
 
         return HttpResponseRedirect(self.get_success_url())
 
@@ -112,12 +174,14 @@ class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
     """
     template_name = 'declare.html'
     model = models.Doctor
+    form_class = forms.DoctorForm
+
     inlines = [
          DeclarationInline,
          PharmaBenefitInline,
-        OtherMedicalBenefitInline,
-        FeeBenefitInline,
-        GrantBenefitInline
+         OtherMedicalBenefitInline,
+         FeeBenefitInline,
+         GrantBenefitInline
          ]
     inlines_names = [
         'Declaration',
@@ -126,6 +190,13 @@ class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
         'FeeBenefits',
         'GrantBenefits'
         ]
+
+    def dispatch(self, *args, **kwargs):
+        link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
+        if link.expires < timezone.now():
+            raise Http404
+        self.link = link
+        return super(AddDeclarationView, self).dispatch(*args, **kwargs)
 
     def forms_valid(self, form, inlines):
         """
@@ -149,6 +220,8 @@ class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
                 benefit.declaration = self.declaration
                 benefit.save()
                 print benefit.declaration, self.declaration
+
+        self.link.delete()
 
         return HttpResponseRedirect(self.get_success_url())
 
