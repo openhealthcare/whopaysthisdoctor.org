@@ -35,6 +35,7 @@ urlpatterns = patterns(
 
     # Register of conflicts of interest
     url(r'^doctor/(?P<pk>\d+)/?$', doctors.views.DoctorDetailView.as_view(), name='doctor-detail'),
+    url(r'^doctor/(?P<pk>\d+)[.]json$', doctors.views.DoctorJSONView.as_view(), name='doctor-json'),
     url(r'^doctors/?$', doctors.views.DoctorListView.as_view(), name='doctor-list'),
 
     url(r'^admin/', include(admin.site.urls)),

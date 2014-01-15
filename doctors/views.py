@@ -4,15 +4,28 @@ Views relating to the register.
 import datetime as dt
 
 from django.core.urlresolvers import reverse_lazy, reverse
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 from extra_views import CreateWithInlinesView, InlineFormSet, UpdateWithInlinesView
 from extra_views import NamedFormsetsMixin
+import simplejson
 
 from doctors import models, forms
+
+class JsonResponse(HttpResponse):
+    """
+        JSON response
+    """
+    def __init__(self, content, mimetype='application/json', status=None, content_type=None):
+        super(JsonResponse, self).__init__(
+            content=simplejson.dumps(content),
+            mimetype=mimetype,
+            status=status,
+            content_type=content_type,
+        )
 
 class EstablishIdentityView(FormView):
     """
@@ -231,6 +244,12 @@ class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
 class DoctorDetailView(DetailView):
     queryset = models.Doctor.objects.all()
     context_object_name = 'doctor'
+
+class DoctorJSONView(DetailView):
+    queryset = models.Doctor.objects.all()
+
+    def get(self, *args, **kw):
+        return JsonResponse(self.get_object().to_dict())
 
 class DoctorListView(ListView):
     template_name = 'doctors/doctor_list.html'
