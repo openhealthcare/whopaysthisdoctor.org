@@ -12,6 +12,11 @@ import letter
 
 POSTIE = letter.DjangoPostman()
 
+class WPTDMessage(letter.Letter):
+    Postie   = POSTIE
+    From     = settings.DEFAULT_FROM_EMAIL
+
+
 class Doctor(models.Model):
     name = models.CharField(max_length=200)
     gmc_number = models.CharField(max_length=100, unique=True)
@@ -35,6 +40,26 @@ class Doctor(models.Model):
             employment_address=self.employment_address,
             declarations=[d.to_dict() for d in self.declaration_set.all()]
             )
+
+    def send_declaration_thanks(self):
+        """
+        Send this doctor an Email thanking them for their declaration,
+        Explaining that if this is their frist submission it will not
+        turn up for 24 hours, and with a link.
+        """
+        class Message(WPTDMessage):
+            To       = self.email
+            Subject  = 'Who Pays This Doctor - Thanks for your declaration'
+            Template = 'email/declaration_thanks'
+            Context  = {
+                'doctor'   : self,
+                'settings' : settings,
+                'register' : reverse('doctor-list')
+                }
+
+        Message.send()
+        return
+
 
 class Declaration(models.Model):
     doctor = models.ForeignKey(Doctor)
@@ -117,10 +142,7 @@ class DeclarationLink(models.Model):
         """
         Send the link to this email.
         """
-        class Message(letter.Letter):
-            Postie   = POSTIE
-
-            From     = settings.DEFAULT_FROM_EMAIL
+        class Message(WPTDMessage):
             To       = self.email
             Subject  = 'Who Pays This Doctor - Edit your public record'
             Template = 'email/edit_public_record'

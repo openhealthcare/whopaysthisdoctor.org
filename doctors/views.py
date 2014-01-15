@@ -118,6 +118,7 @@ class GrantBenefitInline(InlineFormSet):
         return kw
 
 
+
 class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
     """
     Declaring your interests
@@ -179,7 +180,7 @@ class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
                 print benefit.declaration, self.declaration
 
         self.link.delete()
-
+        self.object.send_declaration_thanks()
         return HttpResponseRedirect(self.get_success_url())
 
 
@@ -237,7 +238,7 @@ class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
                 print benefit.declaration, self.declaration
 
         self.link.delete()
-
+        self.object.send_declaration_thanks()
         return HttpResponseRedirect(self.get_success_url())
 
 
