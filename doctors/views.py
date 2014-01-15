@@ -1,6 +1,8 @@
 """
 Views relating to the register.
 """
+import datetime as dt
+
 from django.core.urlresolvers import reverse_lazy, reverse
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect
@@ -231,5 +233,13 @@ class DoctorDetailView(DetailView):
     context_object_name = 'doctor'
 
 class DoctorListView(ListView):
+    template_name = 'doctors/doctor_list.html'
     context_object_name = 'doctors'
-    queryset = models.Doctor.objects.all()
+
+    # This is dynamic to avoid the date being process-start bounded.
+    def get_queryset(self):
+        return set(
+            models.Doctor.objects.filter(
+                declaration__date_created__lte=dt.date.today()-dt.timedelta(days=1)
+                )
+            )
