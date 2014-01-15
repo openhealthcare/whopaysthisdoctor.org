@@ -27,7 +27,7 @@ class BenefitForm(ModelForm):
 
 class DeclarationForm(ModelForm):
     class Meta:
-        exclude = ['date_created']
+        exclude = ['date_created', 'dt_created']
 
 class DeclarationIdentityForm(forms.Form):
     def create_declaration_link(self):
@@ -43,7 +43,6 @@ class DeclarationIdentityForm(forms.Form):
             link.new_key()
         link.send()
         return
-
 
 class IdentityForm(DeclarationIdentityForm):
     email = NHSEmailField()

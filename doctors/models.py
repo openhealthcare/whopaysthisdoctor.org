@@ -32,6 +32,7 @@ class Declaration(models.Model):
     past_declarations = models.TextField(blank=True, null=True)
     other_declarations = models.TextField(blank=True, null=True)
     date_created = models.DateField(default=lambda: dt.date.today())
+    dt_created = models.DateTimeField(default=lambda: dt.datetime.now())
 
     def __unicode__(self):
         return u'{0} - {1}'.format(getattr(self, 'doctor', 'Declaration'),
