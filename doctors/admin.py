@@ -24,6 +24,9 @@ class DoctorAdmin(reversion.VersionAdmin):
 class DeclarationAdmin(reversion.VersionAdmin):
     inlines = (PharmaBenefitInline, OtherMedicalBenefitInline,
                FeeBenefitInline, GrantBenefitInline)
+    list_display = ['doctor', 'dt_created']
+    search_fields = ['doctor__name']
+    list_filter = ['doctor__name']
 
 class DeclarationLinkAdmin(admin.ModelAdmin):
     search_fields = ['email']
