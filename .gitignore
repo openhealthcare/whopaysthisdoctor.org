@@ -4,3 +4,4 @@ static/*
 .coverage
 htmlcov
 *local_settings.py
+whopays/assets
