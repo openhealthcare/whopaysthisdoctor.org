@@ -17,7 +17,7 @@ from doctors import models, forms
 
 class JsonResponse(HttpResponse):
     """
-        JSON response
+    JSON response
     """
     def __init__(self, content, mimetype='application/json', status=None, content_type=None):
         super(JsonResponse, self).__init__(

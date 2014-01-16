@@ -161,6 +161,7 @@ LOGGING = {
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_NAME = 'XSRF-TOKEN'
 DEFAULT_FROM_EMAIL = 'hello@openhealthcare.org.uk'
+CONTACT_EMAIL = DEFAULT_FROM_EMAIL
 DEFAULT_DOMAIN = 'whopaysthisdoctor.org'
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
