@@ -26,7 +26,8 @@ class DeclarationAdmin(reversion.VersionAdmin):
                FeeBenefitInline, GrantBenefitInline)
 
 class DeclarationLinkAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['email']
+    list_display = ['email', 'expires', 'key']
 
 admin.site.register(models.Doctor, DoctorAdmin)
 admin.site.register(models.Declaration, DeclarationAdmin)
