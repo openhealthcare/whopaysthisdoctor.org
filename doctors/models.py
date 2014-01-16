@@ -8,6 +8,7 @@ import random
 from django.conf import settings
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import models
+from django.utils import timezone
 import letter
 
 POSTIE = letter.DjangoPostman()
@@ -134,6 +135,13 @@ class DeclarationLink(models.Model):
     email = models.EmailField(unique=True)
     expires = models.DateTimeField(default=in_one_day)
     key = models.CharField(max_length=64, unique=True, default=lambda: random_token()[:8])
+
+    @property
+    def expired(self):
+        """
+        Has this link expired already?
+        """
+        return link.expires < timezone.now()
 
     def absolute_url(self):
         return 'http://{0}/declare/{1}'.format(settings.DEFAULT_DOMAIN, self.key)
