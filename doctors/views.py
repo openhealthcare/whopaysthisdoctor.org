@@ -260,6 +260,6 @@ class DoctorListView(ListView):
     def get_queryset(self):
         return set(
             models.Doctor.objects.filter(
-                declaration__dt_created__lte=dt.datetime.now()-dt.timedelta(days=1)
+                declaration__dt_created__lte=dt.datetime.now()-dt.timedelta(hours=1)
                 )
             )
