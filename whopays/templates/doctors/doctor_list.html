@@ -6,14 +6,14 @@
         <hr>
         <h2 class="intro-text text-center">Declarations so far</h2>
         <hr />
-        <table class="table">
+        <table class="table sortable">
           <tr>
             <th>Name</th>
             <th>GMC</th>
             <th>Job Title</th>
             <th>Primary Employer</th>
           </tr>
-          {% for doctor in doctors %}
+          {% for doctor in sorted(doctors, reverse=True) %}
             <tr>
               <td>
                 <a href="{{doctor.get_absolute_url}}">
