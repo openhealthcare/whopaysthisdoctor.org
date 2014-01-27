@@ -93,8 +93,8 @@ class Declaration(models.Model):
                   self.othermedicalbenefit_set.count() == 0,
                   self.feebenefit_set.count() == 0,
                   self.grantbenefit_set.count() == 0,
-                  self.past_declarations == '',
-                  self.other_declarations == '')
+                  not self.past_declarations,
+                  not self.other_declarations)
         print things, all(things)
         return all(things)
 
