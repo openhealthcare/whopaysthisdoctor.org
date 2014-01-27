@@ -87,6 +87,17 @@ class Declaration(models.Model):
                 )
             )
 
+    @property
+    def nothing_to_declare(self):
+        things = (self.pharmabenefit_set.count() == 0,
+                  self.othermedicalbenefit_set.count() == 0,
+                  self.feebenefit_set.count() == 0,
+                  self.grantbenefit_set.count() == 0,
+                  self.past_declarations == '',
+                  self.other_declarations == '')
+        print things, all(things)
+        return all(things)
+
 class Benefit(models.Model):
     BAND_CHOICES = (
         (1, u'under \u00a3100'),
