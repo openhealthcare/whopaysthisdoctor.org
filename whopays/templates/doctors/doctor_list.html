@@ -13,7 +13,7 @@
             <th>Job Title</th>
             <th>Primary Employer</th>
           </tr>
-          {% for doctor in sorted(doctors, reverse=True) %}
+          {% for doctor in doctors %}
             <tr>
               <td>
                 <a href="{{doctor.get_absolute_url}}">
