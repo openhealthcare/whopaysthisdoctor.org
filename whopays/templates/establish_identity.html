@@ -23,7 +23,7 @@
                 {% csrf_token %}
                 {{form.email|bootstrap}}
                 <p class="small muted">
-                  Only email addresses ending in  {% for suffix in NHS_EMAIL_SUFFIXES %}{{suffix}} {{forloop.revcounter }}{% if forloop.revcounter == 2 %} or {% elif forloop.revcounter > 1 %}, {% endif %}{% endfor %} can be used.
+                  Only email addresses ending in  {% for suffix in NHS_EMAIL_SUFFIXES %}{{suffix}}{% if forloop.revcounter == 2 %} or {% elif forloop.revcounter > 1 %}, {% endif %}{% endfor %} can be used.
                 </p>
                 <button class="btn btn-default" type="submit">Submit</button>
               </form>
