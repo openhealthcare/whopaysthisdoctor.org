@@ -142,10 +142,15 @@ def in_one_day():
     then = now + dt.timedelta(days=1)
     return then
 
+def in_two_weeks():
+    now = dt.datetime.now()
+    then = now + dt.timedelta(days=14)
+    return then
+
 
 class DeclarationLink(models.Model):
     email = models.EmailField(unique=True)
-    expires = models.DateTimeField(default=in_one_day)
+    expires = models.DateTimeField(default=in_two_weeks)
     key = models.CharField(max_length=64, unique=True, default=lambda: random_token()[:8])
 
     @property
