@@ -25,7 +25,8 @@
                 {{form.email|bootstrap}}
                 {{form.gmc}}
                 <p class="small muted">
-                  Only email addresses ending in  {% for suffix in NHS_EMAIL_SUFFIXES %}{{suffix}}{% if forloop.last %} or {% else %}, {% endif %}{% endfor %} can be used. If you no longer have access to yours, please get in touch with team&#64;whopaysthisdoctor.org.
+                  Only email addresses ending in  {% for suffix in NHS_EMAIL_SUFFIXES %}{{suffix}} {{forloop.revcounter }}{% if forloop.revcounter == 2 %} or {% elif forloop.revcounter > 1 %}, {% endif %}{% endfor %} can be used.
+                  If you no longer have access to yours, please get in touch with team&#64;whopaysthisdoctor.org.
                 </p>
               <p>
                 We will send you a link from which you can edit your public record,
