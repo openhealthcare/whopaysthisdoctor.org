@@ -41,6 +41,8 @@ class DeclarationIdentityForm(forms.Form):
             email=self.cleaned_data['email'])
         if not created:
             link.new_key()
+            if link.expired:
+                link.expire_tomorrow()
         link.send()
         return
 

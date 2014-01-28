@@ -89,14 +89,14 @@ class Declaration(models.Model):
 
     @property
     def nothing_to_declare(self):
-        things = (self.pharmabenefit_set.count() == 0,
-                  self.othermedicalbenefit_set.count() == 0,
-                  self.feebenefit_set.count() == 0,
-                  self.grantbenefit_set.count() == 0,
-                  not self.past_declarations,
-                  not self.other_declarations)
-        print things, all(things)
-        return all(things)
+        the_things = (self.pharmabenefit_set.count() == 0,
+                      self.othermedicalbenefit_set.count() == 0,
+                      self.feebenefit_set.count() == 0,
+                      self.grantbenefit_set.count() == 0,
+                      not self.past_declarations,
+                      not self.other_declarations)
+        return all(the_things)
+
 
 class Benefit(models.Model):
     BAND_CHOICES = (
@@ -142,6 +142,7 @@ def in_one_day():
     then = now + dt.timedelta(days=1)
     return then
 
+
 class DeclarationLink(models.Model):
     email = models.EmailField(unique=True)
     expires = models.DateTimeField(default=in_one_day)
@@ -152,7 +153,14 @@ class DeclarationLink(models.Model):
         """
         Has this link expired already?
         """
-        return link.expires < timezone.now()
+        return self.expires < timezone.now()
+
+    def expire_tomorrow(self):
+        """
+        Update the expires date to be tomorrow.
+        """
+        self.expires = in_one_day()
+        self.save()
 
     def absolute_url(self):
         return 'http://{0}/declare/{1}'.format(settings.DEFAULT_DOMAIN, self.key)
