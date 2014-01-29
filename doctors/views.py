@@ -40,6 +40,7 @@ class EstablishIdentityView(FormView):
         form.create_declaration_link()
         return super(EstablishIdentityView, self).form_valid(form)
 
+
 class ReEstablishIdentityView(FormView):
     """
     View to reestablish the identity of a user so they can
@@ -71,6 +72,7 @@ class DeclarationInline(InlineFormSet):
     model = models.Declaration
     form_class = forms.DeclarationForm
     max_num = 1
+
     def get_formset_kwargs(self):
         kw = super(DeclarationInline, self).get_formset_kwargs()
         kw['queryset'] = models.Declaration.objects.none()
@@ -82,6 +84,7 @@ class PharmaBenefitInline(InlineFormSet):
     form_class = forms.BenefitForm
     can_delete = False
     extra = 3
+
     def get_formset_kwargs(self):
         kw = super(PharmaBenefitInline, self).get_formset_kwargs()
         kw['queryset'] = models.PharmaBenefit.objects.none()
@@ -116,7 +119,6 @@ class GrantBenefitInline(InlineFormSet):
         kw = super(GrantBenefitInline, self).get_formset_kwargs()
         kw['queryset'] = models.GrantBenefit.objects.none()
         return kw
-
 
 
 class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
@@ -246,11 +248,13 @@ class DoctorDetailView(DetailView):
     queryset = models.Doctor.objects.all()
     context_object_name = 'doctor'
 
+
 class DoctorJSONView(DetailView):
     queryset = models.Doctor.objects.all()
 
     def get(self, *args, **kw):
         return JsonResponse(self.get_object().to_dict())
+
 
 class DoctorListView(ListView):
     template_name = 'doctors/doctor_list.html'

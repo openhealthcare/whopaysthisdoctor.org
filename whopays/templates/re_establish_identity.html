@@ -16,7 +16,7 @@
                 In order to establish your identity, please enter the email address which you originally used to make
                 a declaration.
               </p>
-              
+
               <form method="POST" role="form">
                 {% csrf_token %}
                 {% for err in form.non_field_errors %}
@@ -25,10 +25,11 @@
                 {{form.email|bootstrap}}
                 {{form.gmc}}
                 <p class="small muted">
-                  Only email addresses ending in nhs.uk, nhs.net, ac.uk or doctors.org.uk can be used. If you no longer have access to yours, please get in touch with team&#64;whopaysthisdoctor.org.
+                  Only email addresses ending in  {% for suffix in NHS_EMAIL_SUFFIXES %}{{suffix}}{% if forloop.revcounter == 2 %} or {% elif forloop.revcounter > 1 %}, {% endif %}{% endfor %} can be used.
+                  If you no longer have access to yours, please get in touch with team&#64;whopaysthisdoctor.org.
                 </p>
               <p>
-                We will send you a link from which you can edit your public record, 
+                We will send you a link from which you can edit your public record,
 		we'll only use it for the purposes of this site, and it wont be made public.
               </p>
   <button class="btn btn-default" type="submit">Submit</button>
