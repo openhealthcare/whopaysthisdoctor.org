@@ -20,3 +20,8 @@ li {
 .brand a, .address-bar a {
 	color: white;
 }
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):after { 
+    content: " \25B4\25BE" 
+}
+
