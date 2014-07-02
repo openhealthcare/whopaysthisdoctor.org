@@ -166,11 +166,18 @@ CONTACT_EMAIL = DEFAULT_FROM_EMAIL
 DEFAULT_DOMAIN = 'whopaysthisdoctor.org'
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
-EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
-EMAIL_HOST= 'smtp.sendgrid.net'
+
+# Let's switch it up to Mandrill
+# EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
+# EMAIL_HOST= 'smtp.sendgrid.net'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
+
+EMAIL_HOST_USER = os.environ.get('MANDRILL_USERNAME', '')
+EMAIL_HOST = 'smtp.mandrill.com'
 EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
+EMAIL_HOST_PASSWORD = os.environ.get('MANDRILL_APIKEY', '')
 
 NHS_EMAIL_SUFFIXES = ['nhs.net', 'nhs.uk', 'hscni.net', 'ac.uk', 'doctors.org.uk', 'doctors.net.uk']
 ADMIN_SUFFIXES = ['openhealthcare.org.uk', 'deadpansincerity.com', 'msmith.net']
