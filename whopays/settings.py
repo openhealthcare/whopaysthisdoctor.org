@@ -175,7 +175,7 @@ EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.
 # EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
 
 EMAIL_HOST_USER = os.environ.get('MANDRILL_USERNAME', '')
-EMAIL_HOST = 'smtp.mandrill.com'
+EMAIL_HOST = 'smtp.mandrillapp.com'
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = os.environ.get('MANDRILL_APIKEY', '')
 
