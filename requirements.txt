@@ -16,3 +16,4 @@ psycopg2
 dj_static
 django-reversion==1.8.0
 simplejson==3.3.2
+django-markdown-deux==1.0.4

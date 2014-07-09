@@ -125,6 +125,7 @@ INSTALLED_APPS = (
     'bootstrapform',
     'reversion',
     'south',
+    'markdown_deux',
     'doctors'
 )
 

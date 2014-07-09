@@ -1,5 +1,7 @@
 {% extends 'baser.html' %}
 
+{% load markdown_deux_tags %}
+
 {% block content %}
   <div class="row">
     <div class="box">
@@ -139,7 +141,7 @@ medical practice</h2>
               <h2 class="intro-text text-center">Past Declarations</h2>
               <hr />
               <p>
-                {{ declaration.past_declarations }}
+                {{ declaration.past_declarations|markdown }}
               </p>
               {% endif %}
               {% if declaration.other_declarations %}
@@ -147,10 +149,9 @@ medical practice</h2>
               <h2 class="intro-text text-center">Other Declarations</h2>
               <hr />
               <p>
-                {{ declaration.other_declarations }}
+                {{ declaration.other_declarations|markdown }}
               </p>
               {% endif %}
-
 
             </div>
           </div>
