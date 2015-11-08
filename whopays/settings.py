@@ -180,7 +180,7 @@ EMAIL_HOST = 'smtp.mandrillapp.com'
 EMAIL_PORT = 587
 EMAIL_HOST_PASSWORD = os.environ.get('MANDRILL_APIKEY', '')
 
-NHS_EMAIL_SUFFIXES = ['nhs.net', 'nhs.uk', 'hscni.net', 'ac.uk', 'doctors.org.uk', 'doctors.net.uk']
+NHS_EMAIL_SUFFIXES = ['nhs.net', 'nhs.uk', 'hscni.net', 'ac.uk', 'doctors.org.uk', 'doctors.net.uk', 'cochrane.org']
 ADMIN_SUFFIXES = ['openhealthcare.org.uk', 'deadpansincerity.com', 'msmith.net']
 ALL_SUFFIXES = NHS_EMAIL_SUFFIXES + ADMIN_SUFFIXES
 
