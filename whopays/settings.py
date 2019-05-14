@@ -99,7 +99,7 @@ ROOT_URLCONF = 'whopays.urls'
 WSGI_APPLICATION = 'whopays.wsgi.application'
 
 TEMPLATE_DIRS = (
-    ROOT/'templates'
+    ROOT/'templates',
 )
 
 TEMPLATE_CONTEXT_PROCESSORS= (
