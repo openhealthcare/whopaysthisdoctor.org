@@ -1,12 +1,10 @@
 # Django settings for whopays project.
 import os
-
 import dj_database_url
-import ffs
 
-ROOT = ffs.Path.here()
+ROOT = os.path.realpath(os.path.dirname(__file__))
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -50,7 +48,7 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = str(ROOT/'assets')
+STATIC_ROOT = os.path.join(ROOT, 'assets')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -58,7 +56,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
-    str(ROOT/'static'),
+    os.path.join(ROOT, 'static'),
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -99,7 +97,7 @@ ROOT_URLCONF = 'whopays.urls'
 WSGI_APPLICATION = 'whopays.wsgi.application'
 
 TEMPLATE_DIRS = (
-    ROOT/'templates',
+    os.path.join(ROOT, 'templates'),
 )
 
 TEMPLATE_CONTEXT_PROCESSORS= (

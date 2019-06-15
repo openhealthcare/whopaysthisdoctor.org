@@ -2,10 +2,9 @@
 
 You would probably prefer to be looking at www.whoPaysThisDoctor.org
 
-### Contributing
-
-Development environment as a vagrant VM available [here](https://github.com/openhealthcare/developer)
-
-    $ vagrant ssh
-    $ workon whopays
-    $ python manage.py runserver 0.0.0.0:8000
+### To get it running locally
+1. Clone the repo
+2. `pip install -r requirements.txt` in a virtualenv
+3. `python manage.py syncdb`
+4. `python manage.py migrate`
+5. `python manage.py runserver`
