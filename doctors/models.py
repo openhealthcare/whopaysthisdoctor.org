@@ -188,3 +188,9 @@ class DeclarationLink(models.Model):
         self.key = random_token()[:8]
         self.save()
         return
+
+class ImportedDoctorCompanyLink(models.Model):
+    doctor = models.ForeignKey(Doctor)
+    company = models.CharField(max_length=200)
+    officer_link = models.URLField(max_length=300)
+    company_link = models.URLField(max_length=300)
