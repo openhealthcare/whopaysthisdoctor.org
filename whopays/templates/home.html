@@ -2,14 +2,35 @@
 
 {% block content %}
 
-
       <div class="row">
-        <div class="box">
-          <div class="col-lg-12">
-	    <hr>
-            <h2 class="intro-text text-center"><a href="{% url 'doctor-list' %}">View declarations</a> or <a href="{% url 'establish-identity' %}">make your own</a>.</strong></h2>
-            <hr>
+        <div class="col-sm-4">
+            <div class="box home-action">
+              <h2>Are you a doctor?</h2>
+              <p>Make your own self-declarations</p>
+              <a href="/declare" class="btn btn-home">Make a declaration</a>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box home-action">
+              <h2>Find a doctor</h2>
+              <p>Search our list of declarations</p>
+              <a href="/doctors" class="btn btn-home">Search for a doctor</a>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="box home-action home-action--beta">
+              <h2>Add a declaration <span class="home-action--beta-label">BETA</span></h2>
+              <p>Make a declaration for someone else</p>
+              <a href="/declare/thirdparty" class="btn btn-home">Add a declaration</a>
+            </div>
+        </div>
+      </div>
 
+      <div class="row content">
+        <div class="col-lg-12">
+          <div class="box">
+	    
+            <h2>What's this all about?</h2>
             <img class="img-responsive img-border img-left" src="/static/cutlery.jpg" width="300px">
             <hr class="visible-xs">
 
