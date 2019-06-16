@@ -32,6 +32,11 @@ class DeclarationLinkAdmin(admin.ModelAdmin):
     search_fields = ['email']
     list_display = ['email', 'expires', 'key']
 
+class ImportedDoctorCompanyLinkAdmin(admin.ModelAdmin):
+    search_fields = ['doctor']
+    list_display = ['doctor', 'company', 'officer_link', 'company_link']
+
 admin.site.register(models.Doctor, DoctorAdmin)
 admin.site.register(models.Declaration, DeclarationAdmin)
 admin.site.register(models.DeclarationLink, DeclarationLinkAdmin)
+admin.site.register(models.ImportedDoctorCompanyLink, ImportedDoctorCompanyLinkAdmin)
