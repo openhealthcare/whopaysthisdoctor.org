@@ -1,4 +1,4 @@
-body { 
+body {
   background-image: linear-gradient(-180deg, #ECF1F7 0%, #CAD7E5 100%);
   font-family: 'Open Sans', "Helvetica Neue",Helvetica,Arial,sans-serif;
 }
@@ -194,6 +194,10 @@ Doctors
   padding: 0.33em 0.5em;
   width: 20em;
   max-width: 80%;
+}
+
+input.form-control{
+    margin-bottom: 15px;
 }
 
 #no-results {
