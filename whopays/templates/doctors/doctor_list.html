@@ -13,7 +13,6 @@
         <table class="table sortable" id="doctor-table">
           <tr>
             <th>Name</th>
-            <th>Verified</th>
             <th>GMC</th>
             <th>Job Title</th>
             <th>Primary Employer</th>
@@ -25,7 +24,6 @@
                   {{ doctor.name }}
                 </a>
               </td>
-              <td>{% if doctor.self_created %}<span class="verified verified--yes">✓</span>{% else %}<span class="verified verified--no">?</span>{% endif %}</td>
               <td>{{doctor.gmc_number}}</td>
               <td>{{doctor.job_title}}</td>
               <td>{{doctor.primary_employer}}</td>
