@@ -45,11 +45,11 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse navbar-ex1-collapse">
           <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-            <li><a href="/declare">Declare</a></li>
-            <li><a href="/about">About</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/doctors">Doctors</a></li>
+            <li class="{% if request.resolver_match.url_name == 'home' %}current{% endif %}"><a href="/">Home</a></li>
+            <li class="{% if request.resolver_match.url_name == 'establish-identity' %}current{% endif %}"><a href="/declare">Declare</a></li>
+            <li class="{% if request.resolver_match.url_name == 'about' %}current{% endif %}"><a href="/about">About</a></li>
+            <li class="{% if request.resolver_match.url_name == 'contact' %}current{% endif %}"><a href="/contact">Contact</a></li>
+            <li class="{% if request.resolver_match.url_name == 'doctor-list' or request.resolver_match.url_name == 'doctor-detail'  %}current{% endif %}"><a href="/doctors">Doctors</a></li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container -->
@@ -82,12 +82,12 @@
     <script src="https://code.jquery.com/jquery.js"></script>
     <script src="{% static 'css/lib/bootstrap/js/bootstrap.js' %}"></script>
     <script src="{% static 'sorttable.js' %}"></script>
-    <script>
+    <script src="{% static 'main.js' %}"></script>    <script>
 	  // Activates the Carousel
 	  $('.carousel').carousel({
 		interval: 5000
 	  })
-	</script>
+	   </script>
     {% block extrajs %}
 
     {% endblock %}
