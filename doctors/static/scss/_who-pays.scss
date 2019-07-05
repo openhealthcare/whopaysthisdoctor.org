@@ -1,0 +1,262 @@
+.col-lg-12 {
+    float: none;
+}
+
+li {
+  font-size: 1.25em;
+  line-height: 1.6;
+  color: #000;
+}
+
+.hidden {
+    display: none;
+}
+.larger {
+  font-size: 2em;
+}
+
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):after { 
+    content: " \25B4\25BE"
+}
+
+/* --------
+Brand
+----------*/
+
+.brand {
+  font-family: "Copse", Georgia, sans-serif;
+}
+
+.brand a, .address-bar a {
+  color: #0E1217;
+}
+
+.address-bar a {
+  border-top: 1px solid #D0DDE2;
+  border-bottom: 1px solid #D0DDE2;
+  padding: 0.25em;
+  font-weight: 300;
+}
+
+/* --------
+Navbar
+----------*/
+
+.navbar li {
+  font-size: 0.9em
+}
+
+.navbar-default .navbar-nav li a {
+  color: #0E1217;
+}
+  
+.navbar-default .navbar-nav li a:hover,
+.navbar-default .navbar-nav li a:active,
+.navbar-default .navbar-nav li a:focus {
+  background: #1A3862;
+  color: #fff;
+}
+
+.navbar-default .navbar-nav li.current a {
+  background: #CBD4E0;
+}
+
+/* --------
+Content
+----------*/
+
+.content h2 {
+  margin: 0 0 1em;
+}
+
+/* --------
+Homepage actions
+----------*/
+
+.home-action {
+  background: #1A3862;
+  border-radius: 12px;
+  padding: 24px 16px;
+}
+
+.home-action--beta {
+  background: #70249A;
+  position: relative;
+}
+
+.home-action--beta-label {
+  background: #fff;
+  box-shadow: 0px 2px 4px rgba(0,0,0,0.5);
+  color: #0E1217;
+  display: inline-block;
+  font-size: 0.6em;
+  font-weight: 300;
+  padding: 0.4em 0.8em;
+  position: relative;
+  vertical-align: middle;
+  top: -1px;
+}
+
+.home-action h2 {
+  color: #fff;
+  font-family: 'Open Sans', "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 1.5em;
+  font-weight: 600;
+  letter-spacing: 0;
+  margin-top: 0;
+  text-transform: none;
+}
+
+.home-action p {
+  color: #fff;
+  font-weight: 300;
+}
+
+.btn-home {
+  background: #FFFFFF;
+  box-shadow: 0 2px 8px 0 rgba(0,0,0,0.50);
+  color: #3D3D3D;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.btn-home:hover,
+.btn-home:active,
+.btn-home:focus {
+  box-shadow: none;
+  background: #f6f6f6;
+}
+
+/* --------
+Doctors
+----------*/
+
+.verified {
+  background: #aaa;
+  border-radius: 12px;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  height: 24px;
+  padding-top: 2px;
+  position: relative;
+  text-align: center;
+  width: 24px;
+}
+
+.verified:hover::after {
+    display: block
+}
+
+.verified::after {
+  background: #1A3862;
+  border-radius: 6px;
+  content: "Verified doctors are doctors who self-reported using a NHS email address.";
+  display: none;
+  font-size: 14px;
+  font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  width: 20em;
+  padding: 1em;
+  position: absolute;
+  left: 1em;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-align: left;
+  text-transform: none;
+  z-index: 2;
+}
+
+.verified--yes {
+  background-color: #70D006;
+}
+
+.search-control {
+  background: #e6ebf1;
+  border-radius: 6px 6px 0 0;
+  padding: 1em;
+}
+
+.search-control label {
+  margin: 0
+}
+
+.search-control input[type=text] {
+  padding: 0.33em 0.5em;
+  width: 20em;
+  max-width: 80%;
+}
+
+input.form-control{
+    margin-bottom: 15px;
+}
+
+#no-results {
+  background: #F7F3ED;
+  display: none;
+}
+
+
+/* --------
+Declarations
+----------*/
+.declaration-form .checkbox{
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.declaration-form .sub-section{
+    margin-bottom: 20px;
+    display: none;
+}
+
+.declaration-form .show .sub-section{
+    display: block;
+}
+
+.declaration-form .show hr{
+    display: none;
+}
+
+/*
+* Only show the hrs if the menu item above is also open
+*/
+.declaration-form .show + .show hr{
+    display: block;
+}
+
+.declaration-form textarea{
+    margin-bottom: 20px
+}
+
+.content-offset-20{
+    margin-top: 20px;
+}
+
+.content-offset-10{
+    margin-top: 20px;
+}
+
+.btn-row hr{
+    max-width: 200px;
+}
+
+.sub-header-links{
+    a{
+        display: inline-block;
+        height: 9rem;
+        width: 9rem;
+        background-color: $gray-700;
+        color: #fff !important;
+        border-radius: 100%;
+        text-align: center;
+        font-size: 1.2rem;
+        line-height: 1.5rem;
+        margin-right: 4rem;
+        padding-top: 2.8rem;
+
+        &:hover{
+            text-decoration: none;
+            background-color: $primary;
+        }
+    }
+}

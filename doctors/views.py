@@ -90,6 +90,7 @@ class DeclarationInline(InlineFormSetView):
         kw['queryset'] = models.Declaration.objects.none()
         return kw
 
+
 class PharmaBenefitInline(InlineFormSetView):
     inline_model = models.PharmaBenefit
     form_class = forms.BenefitForm
@@ -334,12 +335,18 @@ class DoctorDetailView(DetailView):
 
     def get_context_data(self, *args, **kwargs):
         ctx = super().get_context_data(*args, **kwargs)
-        declarations = collections.defaultdict(list)
-        for declaration in self.object.detaileddeclaration_set.all():
-            declarations[declaration.for_year].append(
-                declarations
+        declarations = self.object.detaileddeclaration_set.order_by(
+            "-for_year"
+        )
+        # python 3.7 dicts maintain order!
+        ctx["declarations"] = {}
+        for declaration in declarations:
+            if declaration.for_year not in ctx["declarations"]:
+                ctx["declarations"][declaration.for_year] = []
+
+            ctx["declarations"][declaration.for_year].append(
+                declaration
             )
-        ctx["declarations"] = declarations
         return ctx
 
 
@@ -354,14 +361,14 @@ class HomeView(TemplateView):
     """
     Homepage for Whopaysthisdoctor.
     """
-    template_name='home.html'
+    template_name = 'home.html'
 
 
 class AboutView(TemplateView):
     """
     Aboutpage for Whopaysthisdoctor.
     """
-    template_name='about.html'
+    template_name = 'about.html'
 
 
 class DoctorListView(ListView):
@@ -370,10 +377,10 @@ class DoctorListView(ListView):
 
     # This is dynamic to avoid the date being process-start bounded.
     def get_queryset(self):
-
-        return sorted(set(
-            models.Doctor.objects.filter(
-                declaration__dt_created__lte=dt.datetime.now()-dt.timedelta(hours=1)
-                )
-            ), reverse=True)
+        an_hour_ago = dt.datetime.now()-dt.timedelta(
+            hours=1
+        )
+        return models.Doctor.objects.filter(
+            detaileddeclaration__dt_created__lte=an_hour_ago
+        ).order_by("-detaileddeclaration__dt_created")
 

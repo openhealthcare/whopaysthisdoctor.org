@@ -1,0 +1,19 @@
+{% if not hide %}
+<div class="row">
+  <div class="col-sm-7">
+    <h4 class="mb-0">{{ title }}</h4>
+    <div class="subheading mb-3">
+      {{ band_value }}
+    </div>
+    <p>
+      {{ details_value }}
+    </p>
+  </div>
+  <div class="col-sm-1"></div>
+  <div class="col-sm-4">
+    {% for boolean_title in boolean_titles %}
+      {{ boolean_title }} <i class="fa fa-check" aria-hidden="true"></i>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}

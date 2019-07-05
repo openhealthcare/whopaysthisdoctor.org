@@ -1,128 +1,93 @@
 {% extends 'baser.html' %}
-{% load bootstrap %}
+{% load bootstrap4 %}
 {% load utils %}
 
 {% block content %}
+<section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="experience">
+    <div class="container-fluid ">
 
   <form method="POST" role="form" class="declaration-form" action="#">
     {% csrf_token %}
-
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <h2>Declare your interests</h2>
-          <p>
-            You are able to use this form to declare any financial interests in the last 12 months, or since your last
-            declaration, relating to income received other than from your "primary employer" given below.
-            If in doubt, it is always best to declare income.
-          </p>
-        </div>
+    <div class="row mb-5">
+      <div class="col-lg-12">
+        <h2>Declare your interests</h2>
+        <p>
+          You are able to use this form to declare any financial interests in the last 12 months, or since your last
+          declaration, relating to income received other than from your "primary employer" given below.
+          If in doubt, it is always best to declare income.
+        </p>
       </div>
     </div>
 
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <hr />
-          <h2 class="intro-text text-center">Section 1: Identifying information</h2>
-          <hr>
-          {{ form.errors }}
-          <div class="row">
-            {% field_layout form.name horizontal=1 %}
-            {% field_layout form.gmc_number horizontal=1 %}
-            {% field_layout form.email horizontal=1 %}
-          </div>
-        </div>
+    <div class="row mb-5">
+      <div class="col-lg-10">
+        <h3 class="mb-3">Section 1: Identifying information</h3>
+        {% field_layout form.name horizontal=1 %}
+        {% field_layout form.gmc_number horizontal=1 %}
+        {% field_layout form.email horizontal=1 %}
       </div>
     </div>
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <hr />
-          <h2 class="intro-text text-center">Section 2: Year of declaration</h2>
-          <hr>
-          <div class="row content-offset-20">
-            <div class="col-lg-4"></div>
-            <div class="text-center col-lg-4">
-              <select name="detaileddeclaration_set-0-for_year" class="form-control" id="id_detaileddeclaration_set-0-for_year">
-                  <option value="2019">2019</option>
 
-                  <option value="2018">2018</option>
+    <div class="row mb-5">
+      <div class="col-lg-8">
+        <h3 class="mb-3">Section 2: Year of declaration</h3>
+          <select name="detaileddeclaration_set-0-for_year" class="form-control" id="id_detaileddeclaration_set-0-for_year">
+            <option value="2019">2019</option>
 
-                  <option value="2017">2017</option>
+            <option value="2018">2018</option>
 
-                  <option value="2016">2016</option>
+            <option value="2017">2017</option>
 
-                  <option value="2015">2015</option>
+            <option value="2016">2016</option>
 
-                  <option value="2014">2014</option>
+            <option value="2015">2015</option>
 
-                  <option value="2013">2013</option>
+            <option value="2014">2014</option>
 
-                  <option value="2012">2012</option>
+            <option value="2013">2013</option>
 
-                  <option value="2011">2011</option>
+            <option value="2012">2012</option>
 
-                  <option value="2010">2010</option>
+            <option value="2011">2011</option>
 
-                </select>
-            </div>
-          </div>
-        </div>
+            <option value="2010">2010</option>
+          </select>
       </div>
     </div>
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <div class="row">
-            <div class="col-lg-12">
-              <hr />
-              <h2 class="intro-text text-center">Section 3: Employment Details</h2>
-              <hr>
-            </div>
+
+
+    <div class="row mb-5">
+      <div class="col-lg-10">
+        <h3 class="mb-3">Section 3: Employment Details</h3>
+        <div class="row content-offset-20">
+          <div class="col-lg-6">
+            <h5>Primary position</h5>
           </div>
-          <div class="row content-offset-20">
-            <div class="col-lg-6">
-              <h4>Primary position</h4>
-            </div>
-          </div>
-          {% field_layout form.job_title horizontal=1 %}
-          {% field_layout form.primary_employer horizontal=1 %}
-          {% field_layout form.employment_address horizontal=1 %}
-          {{ workdetailsinline.management_form }}
-          {% for form in workdetailsinline.forms %}
-          <div class="row content-offset-20">
-            <div class="col-lg-6">
-              <h4>Other positions held</h4>
-            </div>
-          </div>
-          <div class="work-details">
-            <div class="row">
-              <div class="col-ld-12">
-                {{ form.position|bootstrap_horizontal }}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-ld-12">
-                {{ form.details|bootstrap_horizontal }}
-              </div>
-            </div>
-            <div class="row">
-              <div class="col-ld-12">
-                {{ form.errors }}
-              </div>
-            </div>
-          </div>
-          {% endfor %}
         </div>
+        {% field_layout form.job_title horizontal=1 %}
+        {% field_layout form.primary_employer horizontal=1 %}
+        {% field_layout form.employment_address horizontal=1 %}
+        {{ workdetailsinline.management_form }}
+        {% for form in workdetailsinline.forms %}
+        <div class="row content-offset-20">
+          <div class="col-lg-6">
+            <h5>Other positions held</h5>
+          </div>
+        </div>
+        <div class="work-details">
+          {% field_layout form.position horizontal=1 %}
+          {% field_layout form.details horizontal=1 %}
+        </div>
+        {% endfor %}
       </div>
     </div>
+
+
 
 
     {{ detaileddeclarationinline.management_form }}
     {% for declaration_form in detaileddeclarationinline.forms %}
     <div class="row ">
-        <div class="box">
           <div class="col-lg-12">
             <hr />
             <h2 class="intro-text text-center">Section 4: Declaration Details</h2>
@@ -248,9 +213,10 @@
         </div>
       </div>
     </div>
-    </div>
     {% endfor %}
   </form>
+    </div>
+</section>
 
 {% endblock %}
 

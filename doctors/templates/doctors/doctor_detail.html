@@ -1,8 +1,63 @@
 {% extends 'baser.html' %}
 
 {% load markdown_deux_tags %}
+{% load utils %}
 
 {% block content %}
+<section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="experience">
+  <div class="container-fluid ">
+    <div class="d-flex">
+      <div class="p-2 flex-grow-1"><h2 class="mb-0">{{ doctor.name }}</h2></div>
+      <div class="p-2 align-self-center">
+        <a href="{% url 'establish-identity' %}" class="btn btn-secondary">Make a declaration</a>
+      </div>
+    </div>
+    <div class="row mb-5">
+      <div class="col-6">
+        <div class="row">
+            <div class="col-sm">
+                GMC: {{ doctor.gmc_number }}
+            </div>
+            <div class="col-sm">
+                {{ doctor.job_title }}
+            </div>
+            <div class="col-sm">
+                {{ doctor.primary_employer }}
+            </div>
+        </div>
+      </div>
+    </div>
+
+  {% for for_year, declarations in declarations.items %}
+  <div class="resume-date text-md-right p-2">
+    <h3>
+      <span class="text-primary">{{ for_year }}</span>
+    </h3>
+  </div>
+  <div class="resume-item d-flex flex-column flex-md-row mb-5">
+    <div class="p-2 flex-grow-1">
+      {% for declaration in declarations %}
+        {% display_subdeclaration_display declaration "consultancy" "consultancy_band" "consultancy_details" "pharmaceutical_companies,technology_companies,consultancy_other" %}
+        {% display_subdeclaration_display declaration "academic" "academic_band" "academic_details" "research_grants,academic_other" %}
+        {% display_subdeclaration_display declaration "other_work" "other_work_band" "other_work_details" "public_relations,commercial_relationships,media" %}
+        {% display_subdeclaration_display declaration "financial" "financial_band" "financial_details" "patents_owned,shares" %}
+        {% display_subdeclaration_display declaration "spousal" "spousal_band" "spousal_details" %}
+        {% display_subdeclaration_display declaration "sponsored" "sponsored_band" "sponsored_details" "conferences,meals" %}
+        {% display_subdeclaration_display declaration "political" "political_band" "political_details" %}
+      {% endfor %}
+      </div>
+      <div class="resume-date text-md-right p-2">
+
+
+  </div>
+  {% endfor %}
+
+
+
+  </div>
+</section>
+{% comment %}
+
   <div class="row">
     <div class="box">
       <div class="col-lg-12">
@@ -177,6 +232,8 @@ medical practice</h2>
         </div>
 
     {% endfor %}
+
+{% endcomment %}
 
 
 
