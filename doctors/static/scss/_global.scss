@@ -12,15 +12,20 @@ body {
   }
 }
 
+
 h1,
-h2,
+h2{
+  @include heading-font;
+  font-weight: 300;
+  color: $gray-800;
+}
+
 h3,
 h4,
 h5,
 h6 {
   @include heading-font;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-weight: 600;
   color: $gray-800;
 }
 
@@ -43,8 +48,8 @@ p.lead {
 }
 
 .subheading {
-  text-transform: uppercase;
-  font-weight: 500;
+//   text-transform: uppercase;
+  font-weight: 400;
   @include heading-font;
   font-size: 1.5rem;
 }
