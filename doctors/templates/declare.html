@@ -1,0 +1,284 @@
+{% extends 'baser.html' %}
+{% load bootstrap %}
+{% load utils %}
+
+{% block content %}
+
+  <form method="POST" role="form" class="declaration-form" action="#">
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <h2>Declare your interests</h2>
+          <p>
+            You are able to use this form to declare any financial interests in the last 12 months, or since your last
+            declaration, relating to income received other than from your "primary employer" given below.
+            If in doubt, it is always best to declare income.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <hr />
+          <h2 class="intro-text text-center">Section 1: Identifying information</h2>
+          <hr>
+          {{ form.errors }}
+          <div class="row">
+            {% field_layout form.name horizontal=1 %}
+            {% field_layout form.gmc_number horizontal=1 %}
+            {% field_layout form.email horizontal=1 %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <hr />
+          <h2 class="intro-text text-center">Section 2: Year of declaration</h2>
+          <hr>
+          <div class="row content-offset-20">
+            <div class="col-lg-4"></div>
+            <div class="text-center col-lg-4">
+              <select name="detaileddeclaration_set-0-for_year" class="form-control" id="id_detaileddeclaration_set-0-for_year">
+                  <option value="2019">2019</option>
+
+                  <option value="2018">2018</option>
+
+                  <option value="2017">2017</option>
+
+                  <option value="2016">2016</option>
+
+                  <option value="2015">2015</option>
+
+                  <option value="2014">2014</option>
+
+                  <option value="2013">2013</option>
+
+                  <option value="2012">2012</option>
+
+                  <option value="2011">2011</option>
+
+                  <option value="2010">2010</option>
+
+                </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <div class="row">
+            <div class="col-lg-12">
+              <hr />
+              <h2 class="intro-text text-center">Section 3: Employment Details</h2>
+              <hr>
+            </div>
+          </div>
+          <div class="row content-offset-20">
+            <div class="col-lg-6">
+              <h4>Primary position</h4>
+            </div>
+          </div>
+          {% field_layout form.job_title horizontal=1 %}
+          {% field_layout form.primary_employer horizontal=1 %}
+          {% field_layout form.employment_address horizontal=1 %}
+          {{ workdetailsinline.management_form }}
+          {% for form in workdetailsinline.forms %}
+          <div class="row content-offset-20">
+            <div class="col-lg-6">
+              <h4>Other positions held</h4>
+            </div>
+          </div>
+          <div class="work-details">
+            <div class="row">
+              <div class="col-ld-12">
+                {{ form.position|bootstrap_horizontal }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-ld-12">
+                {{ form.details|bootstrap_horizontal }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-ld-12">
+                {{ form.errors }}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+
+    {{ detaileddeclarationinline.management_form }}
+    {% for declaration_form in detaileddeclarationinline.forms %}
+    <div class="row ">
+        <div class="box">
+          <div class="col-lg-12">
+            <hr />
+            <h2 class="intro-text text-center">Section 4: Declaration Details</h2>
+            <hr>
+            <p>
+              Please include the personal receipt of any benefits from a pharmaceutical company or other sources. This might include speaker’s fees, honoraria, expenses or any significant gifts or payments in kind.
+            </p>
+          </div>
+          <div class="row content-offset-20">
+            <div class="col-lg-12">
+              <div class="col-lg-6">
+                <h4>If you have nothing to declare</h4>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class="text-center">
+            <button value="1" name="detaileddeclaration_set-0-nothing_to_declare" class="btn btn-default" type="submit">Nothing to declare.</button>
+          </div>
+          <hr />
+
+          <div class="row content-offset-20">
+            <div class="col-lg-12">
+              <div class="col-lg-6">
+                <h4>Otherwise</h4>
+              </div>
+            </div>
+          </div>
+          <div class="row content-offset-10">
+            <div class="sub-section-title col-lg-3">
+              {% field_layout declaration_form.consultancy %}
+            </div>
+            <div class="sub-section col-lg-6">
+              {% field_layout declaration_form.pharmaceutical_companies %}
+              {% field_layout declaration_form.technology_companies %}
+              {% field_layout declaration_form.consultancy_other %}
+              {% field_layout declaration_form.consultancy_details %}
+              {% field_layout declaration_form.consultancy_band %}
+            </div>
+          </div>
+          <div class="row content-offset-10">
+            <div class="sub-section-title col-lg-3">
+              {% field_layout declaration_form.academic %}
+            </div>
+            <div class="sub-section col-lg-6">
+              <hr />
+              {% field_layout declaration_form.research_grants %}
+              {% field_layout declaration_form.technology_companies %}
+              {% field_layout declaration_form.academic_other %}
+              {% field_layout declaration_form.academic_details %}
+              {% field_layout declaration_form.academic_band %}
+            </div>
+          </div>
+          <div class="row content-offset-10">
+            <div class="sub-section-title col-lg-3">
+              {% field_layout declaration_form.other_work %}
+            </div>
+            <div class="sub-section col-lg-6">
+              <hr />
+              {% field_layout declaration_form.public_relations %}
+              {% field_layout declaration_form.technology_companies %}
+              {% field_layout declaration_form.commercial_relationships %}
+              {% field_layout declaration_form.media %}
+              {% field_layout declaration_form.other_work_details %}
+              {% field_layout declaration_form.other_work_band %}
+            </div>
+          </div>
+          <div class="row content-offset-10">
+            <div class="sub-section-title col-lg-3">
+              {% field_layout declaration_form.financial %}
+            </div>
+            <div class="sub-section col-lg-6">
+              <hr />
+              {% field_layout declaration_form.patents_owned %}
+              {% field_layout declaration_form.shares %}
+              {% field_layout declaration_form.financial_details %}
+              {% field_layout declaration_form.financial_band %}
+            </div>
+          </div>
+          <div class="row content-offset-10">
+            <div class="sub-section-title col-lg-3">
+              {% field_layout declaration_form.spousal %}
+            </div>
+            <div class="sub-section col-lg-6">
+              <hr />
+              {% field_layout declaration_form.spousal_details %}
+              {% field_layout declaration_form.spousal_band %}
+              <hr />
+            </div>
+          </div>
+
+          <div class="row content-offset-10">
+            <div class="sub-section-title col-lg-3">
+              {% field_layout declaration_form.sponsored %}
+            </div>
+            <div class="sub-section col-lg-6">
+              <hr />
+              {% field_layout declaration_form.conferences %}
+              {% field_layout declaration_form.meals %}
+              {% field_layout declaration_form.sponsored_details %}
+              {% field_layout declaration_form.sponsored_band %}
+            </div>
+          </div>
+
+          <div class="row content-offset-10">
+            <div class="sub-section-title col-lg-3">
+              {% field_layout declaration_form.political %}
+            </div>
+            <div class="sub-section col-lg-6">
+              <hr />
+              {% field_layout declaration_form.political_details %}
+              {% field_layout declaration_form.political_band %}
+            </div>
+          </div>
+
+      <div class="row btn-row">
+        <div class="col-lg-12">
+          <hr />
+          <div class="text-center">
+            <button class="btn btn-default" type="submit">Make my declaration</button>
+          </div>
+          <hr />
+        </div>
+      </div>
+    </div>
+    </div>
+    {% endfor %}
+  </form>
+
+{% endblock %}
+
+{% block extrajs %}
+  <script type="text/javascript" src="/static/jquery.formset.js"></script>
+  <script type="text/javascript">
+    var displaySubsections = function($el){
+        if($el.prop("checked")){
+          $el.closest(".sub-section-title").parent().addClass("show");
+        }
+        else{
+          $el.closest(".sub-section-title").parent().removeClass("show");
+        }
+    }
+
+    $(document).ready(function(){
+
+      // Add many for the work details
+      $('.work-details').formset({prefix:'{{WorkDetails.prefix}}', addCssClass: 'btn btn-default'});
+
+      $(".sub-section-title input").each(function(i, el){
+        displaySubsections($(el))
+      });
+
+      $(".sub-section-title input").change(function(){
+        var $this = $(this);
+        displaySubsections($this);
+      });
+    });
+  </script>
+{% endblock %}

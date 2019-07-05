@@ -1,0 +1,37 @@
+<div class="row">
+  <div class="col-lg-12">
+    {{ declaration.dt_created|date }}
+  </div>
+</div>
+{% if declaration.nothing_to_declare %}
+<div class="row">
+  <div class="col-lg-12">
+    <h3>Nothing to declare</h3>
+  </div>
+</div>
+{% endif %}
+{% if declaration.clinical_work %}
+<div class="row">
+  <div class="col-lg-8">
+    <h3>Clinical work</h3>
+    <ul>
+      <li>
+
+      </li>
+    </ul>
+  </div>
+</div>
+<div class="row">
+  <div class="col-lg-8">
+    {{ clinical_work_det  ails }}
+  </div>
+  <div class=
+</div>
+
+{% endif %}
+{% if declaration.consultancy %}
+
+{% endif %}
+{% if declaration.academic_relationships %}
+
+{% endif %}

@@ -1,0 +1,37 @@
+{% extends 'baser.html' %}
+{% block content %}
+  <div class="row content">
+    <div class="col-lg-12">
+    <div class="box">
+        <h2>Declarations so far</h2>
+        <div class="search-control">
+          <label>
+            Search for a doctor
+            <input type="text" id="search-field" placeholder="e.g. by surname or where they work" />
+          </label>
+        </div>
+        <table class="table sortable" id="doctor-table">
+          <tr>
+            <th>Name</th>
+            <th>GMC</th>
+            <th>Job Title</th>
+            <th>Primary Employer</th>
+          </tr>
+          {% for doctor in doctors %}
+            <tr class="doctor">
+              <td>
+                <a href="{{doctor.get_absolute_url}}">
+                  {{ doctor.name }}
+                </a>
+              </td>
+              <td>{{doctor.gmc_number}}</td>
+              <td>{{doctor.job_title}}</td>
+              <td>{{doctor.primary_employer}}</td>
+            </tr>
+          {% endfor %}
+          <tr id="no-results"><td colspan="4">No results found</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endblock %}

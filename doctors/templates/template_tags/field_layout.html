@@ -1,0 +1,16 @@
+{% load bootstrap %}
+{% if horizontal %}
+<div class="row">
+  <div class="col-lg-12">
+    {{ field|bootstrap_horizontal }}
+  </div>
+</div>
+{% else %}
+<div class="row">
+  <div class="col-lg-12">
+    <div class="col-lg-12">
+      {{ field|bootstrap }}
+    </div>
+  </div>
+</div>
+{% endif %}
