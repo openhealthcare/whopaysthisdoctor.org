@@ -371,6 +371,12 @@ input.form-control {
 /* --------
 Declarations
 ----------*/
+.declaration-form {
+  /*
+    * Only show the hrs if the menu item above is also open
+    */
+}
+
 .declaration-form .checkbox {
   margin-top: 0;
   margin-bottom: 0;
@@ -389,27 +395,12 @@ Declarations
   display: none;
 }
 
-/*
-* Only show the hrs if the menu item above is also open
-*/
 .declaration-form .show + .show hr {
   display: block;
 }
 
 .declaration-form textarea {
   margin-bottom: 20px;
-}
-
-.content-offset-20 {
-  margin-top: 20px;
-}
-
-.content-offset-10 {
-  margin-top: 20px;
-}
-
-.btn-row hr {
-  max-width: 200px;
 }
 
 .sub-header-links a {
@@ -424,11 +415,37 @@ Declarations
   line-height: 1.5rem;
   margin-right: 4rem;
   padding-top: 2.8rem;
+  margin-top: 2rem;
 }
 
 .sub-header-links a:hover {
   text-decoration: none;
   background-color: #BD5D38;
+}
+
+.btn-default {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-default:hover {
+  color: #fff;
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn-default:active {
+  color: #fff;
+  background-color: #545b62;
+  border-color: #4e555b;
+}
+
+.btn-default:focus {
+  color: #fff;
+  -webkit-box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+          box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
+  outline: 0;
 }
 
 .bg-primary {

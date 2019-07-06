@@ -59,7 +59,7 @@
     <div class="row mb-5">
       <div class="col-lg-10">
         <h3 class="mb-3">Section 3: Employment Details</h3>
-        <div class="row content-offset-20">
+        <div class="row mb-3">
           <div class="col-lg-6">
             <h5>Primary position</h5>
           </div>
@@ -69,7 +69,7 @@
         {% field_layout form.employment_address horizontal=1 %}
         {{ workdetailsinline.management_form }}
         {% for form in workdetailsinline.forms %}
-        <div class="row content-offset-20">
+        <div class="row mb-3">
           <div class="col-lg-6">
             <h5>Other positions held</h5>
           </div>
@@ -87,40 +87,28 @@
 
     {{ detaileddeclarationinline.management_form }}
     {% for declaration_form in detaileddeclarationinline.forms %}
-    <div class="row ">
-          <div class="col-lg-12">
-            <hr />
-            <h2 class="intro-text text-center">Section 4: Declaration Details</h2>
-            <hr>
-            <p>
-              Please include the personal receipt of any benefits from a pharmaceutical company or other sources. This might include speaker’s fees, honoraria, expenses or any significant gifts or payments in kind.
-            </p>
-          </div>
-          <div class="row content-offset-20">
+    <div class="row mb-5">
+        <div class="col-lg-10">
+          <h3 class="mb-3">Section 4: Declaration Details</h3>
+          <div class="row mb-3">
             <div class="col-lg-12">
-              <div class="col-lg-6">
-                <h4>If you have nothing to declare</h4>
-              </div>
+              <h4>If you have nothing to declare</h4>
             </div>
           </div>
-          <hr />
           <div class="text-center">
             <button value="1" name="detaileddeclaration_set-0-nothing_to_declare" class="btn btn-default" type="submit">Nothing to declare.</button>
           </div>
-          <hr />
-
-          <div class="row content-offset-20">
+          <div class="row mb-3">
             <div class="col-lg-12">
-              <div class="col-lg-6">
-                <h4>Otherwise</h4>
-              </div>
+              <h4>Otherwise</h4>
             </div>
           </div>
-          <div class="row content-offset-10">
+          <div class="row mb-3">
             <div class="sub-section-title col-lg-3">
               {% field_layout declaration_form.consultancy %}
             </div>
             <div class="sub-section col-lg-6">
+              <hr />
               {% field_layout declaration_form.pharmaceutical_companies %}
               {% field_layout declaration_form.technology_companies %}
               {% field_layout declaration_form.consultancy_other %}
@@ -128,7 +116,7 @@
               {% field_layout declaration_form.consultancy_band %}
             </div>
           </div>
-          <div class="row content-offset-10">
+          <div class="row mb-3">
             <div class="sub-section-title col-lg-3">
               {% field_layout declaration_form.academic %}
             </div>
@@ -141,7 +129,7 @@
               {% field_layout declaration_form.academic_band %}
             </div>
           </div>
-          <div class="row content-offset-10">
+          <div class="row mb-3">
             <div class="sub-section-title col-lg-3">
               {% field_layout declaration_form.other_work %}
             </div>
@@ -155,7 +143,7 @@
               {% field_layout declaration_form.other_work_band %}
             </div>
           </div>
-          <div class="row content-offset-10">
+          <div class="row mb-3">
             <div class="sub-section-title col-lg-3">
               {% field_layout declaration_form.financial %}
             </div>
@@ -167,7 +155,7 @@
               {% field_layout declaration_form.financial_band %}
             </div>
           </div>
-          <div class="row content-offset-10">
+          <div class="row mb-3">
             <div class="sub-section-title col-lg-3">
               {% field_layout declaration_form.spousal %}
             </div>
@@ -175,11 +163,10 @@
               <hr />
               {% field_layout declaration_form.spousal_details %}
               {% field_layout declaration_form.spousal_band %}
-              <hr />
             </div>
           </div>
 
-          <div class="row content-offset-10">
+          <div class="row mb-3">
             <div class="sub-section-title col-lg-3">
               {% field_layout declaration_form.sponsored %}
             </div>
@@ -192,7 +179,7 @@
             </div>
           </div>
 
-          <div class="row content-offset-10">
+          <div class="row mb-3">
             <div class="sub-section-title col-lg-3">
               {% field_layout declaration_form.political %}
             </div>
@@ -205,11 +192,9 @@
 
       <div class="row btn-row">
         <div class="col-lg-12">
-          <hr />
           <div class="text-center">
             <button class="btn btn-default" type="submit">Make my declaration</button>
           </div>
-          <hr />
         </div>
       </div>
     </div>

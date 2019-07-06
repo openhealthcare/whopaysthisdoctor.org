@@ -199,45 +199,35 @@ input.form-control{
 /* --------
 Declarations
 ----------*/
-.declaration-form .checkbox{
-    margin-top: 0;
-    margin-bottom: 0;
-}
+.declaration-form{
+    .checkbox{
+        margin-top: 0;
+        margin-bottom: 0;
+    }
 
-.declaration-form .sub-section{
-    margin-bottom: 20px;
-    display: none;
-}
+    .sub-section{
+        margin-bottom: 20px;
+        display: none;
+    }
 
-.declaration-form .show .sub-section{
-    display: block;
-}
+    .show .sub-section{
+        display: block;
+    }
 
-.declaration-form .show hr{
-    display: none;
-}
+    /*
+    * Only show the hrs if the menu item above is also open
+    */
+    .show hr{
+        display: none;
+    }
 
-/*
-* Only show the hrs if the menu item above is also open
-*/
-.declaration-form .show + .show hr{
-    display: block;
-}
+    .show + .show hr{
+        display: block;
+    }
 
-.declaration-form textarea{
-    margin-bottom: 20px
-}
-
-.content-offset-20{
-    margin-top: 20px;
-}
-
-.content-offset-10{
-    margin-top: 20px;
-}
-
-.btn-row hr{
-    max-width: 200px;
+    textarea{
+        margin-bottom: 20px
+    }
 }
 
 .sub-header-links{
@@ -253,6 +243,7 @@ Declarations
         line-height: 1.5rem;
         margin-right: 4rem;
         padding-top: 2.8rem;
+        margin-top: 2rem;
 
         &:hover{
             text-decoration: none;
@@ -260,3 +251,29 @@ Declarations
         }
     }
 }
+
+.btn-default{
+    // copied from bootstrap secondary
+    color: $white;
+    background-color: #6c757d;
+    border-color: #6c757d;
+
+    &:hover{
+        color: $white;
+        background-color: #5a6268;
+        border-color: #545b62;
+    }
+
+    &:active{
+        color: $white;
+        background-color: #545b62;
+        border-color: #4e555b;
+    }
+
+    &:focus{
+        color: $white;
+        box-shadow: 0 0 0 0.2rem rgba(108,117,125,.5);
+        outline: 0;
+    }
+}
+

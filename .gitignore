@@ -1,4 +1,4 @@
 __pycache__/
-*.sqlite3
+*.sqlite*
 *.py[cod]
 .vscode

@@ -32,6 +32,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    '127.0.0.1',
     'whopaysthisdoctor2.herokuapp.com',
 ]
 
