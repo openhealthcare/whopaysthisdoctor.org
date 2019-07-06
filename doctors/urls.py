@@ -17,7 +17,11 @@ urlpatterns = [
     path('about', views.AboutView.as_view(), name='about'),
     path('contact', TemplateView.as_view(template_name='contact.html'), name="contact"),
     # Making declarations
-    path('declare', doctors.views.EstablishIdentityView.as_view(), name='establish-identity'),
+    path(
+        'declare',
+        doctors.views.EstablishIdentityView.as_view(),
+        name='establish-identity'
+    ),
     path(
         'restablish-identity/<pk>',
         doctors.views.ReEstablishIdentityView.as_view(),
