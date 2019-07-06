@@ -1,0 +1,29 @@
+<div class="d-flex">
+    <div class="p-2 flex-grow-1"><h2 class="mb-0">{{ doctor.name }}</h2></div>
+    <div class="p-2 align-self-center">
+      <a href="{% url 're-establish-identity' pk=doctor.pk %}" class="btn btn-secondary">Make a declaration</a>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-8">
+      <div class="row">
+          <div class="col-sm">
+              GMC: {{ doctor.gmc_number }}
+          </div>
+          <div class="col-sm">
+              {{ doctor.job_title }}
+          </div>
+          <div class="col-sm">
+              {{ doctor.primary_employer }}
+          </div>
+      </div>
+    </div>
+  </div>
+  <ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'doctor-detail' %}active{% endif %}" href="{% url 'doctor-detail' pk=doctor.pk %}">Recent declarations</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link {% if request.resolver_match.url_name == 'doctor-detail-archived' %}active{% endif %}" href="{% url 'doctor-detail-archived' pk=doctor.pk %}">Archived declarations</a>
+    </li>
+  </ul>

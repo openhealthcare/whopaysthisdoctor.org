@@ -236,6 +236,12 @@ class DoctorDetailView(DetailView):
         return ctx
 
 
+class DoctorDetailArchivedView(DetailView):
+    model = models.Doctor
+    context_object_name = 'doctor'
+    template_name = "doctors/doctor_detail_archived.html"
+
+
 class DoctorJSONView(DetailView):
     queryset = models.Doctor.objects.all()
 
@@ -269,7 +275,7 @@ class DoctorListView(ListView):
         return models.Doctor.objects.filter(
             Q(detaileddeclaration__dt_created__lte=an_hour_ago) |
             Q(detaileddeclaration=None)
-        ).order_by(
+        ).distinct().order_by(
             "-detaileddeclaration__dt_created", "-declaration__dt_created"
-        ).distinct()
+        )
 

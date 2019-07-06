@@ -448,6 +448,11 @@ Declarations
   outline: 0;
 }
 
+.faded {
+  font-weight: 600;
+  color: #adb5bd;
+}
+
 .bg-primary {
   background-color: #BD5D38 !important;
 }

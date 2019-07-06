@@ -51,9 +51,14 @@ urlpatterns = [
 
     # Register of conflicts of interest
     path(
-        'doctor/<pk>/',
+        'doctor/<pk>/active',
         doctors.views.DoctorDetailView.as_view(),
         name='doctor-detail'
+    ),
+    path(
+        'doctor/<pk>/archived',
+        doctors.views.DoctorDetailArchivedView.as_view(),
+        name='doctor-detail-archived'
     ),
     path(
         'doctor/<pk>.json',

@@ -6,27 +6,16 @@
 {% block content %}
 <section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="experience">
   <div class="container-fluid ">
-    <div class="d-flex">
-      <div class="p-2 flex-grow-1"><h2 class="mb-0">{{ doctor.name }}</h2></div>
-      <div class="p-2 align-self-center">
-        <a href="{% url 're-establish-identity' pk=doctor.pk %}" class="btn btn-secondary">Make a declaration</a>
-      </div>
+  {% include "partials/doctor_header.html" %}
+  {% if not declarations %}
+  <div class="row">
+    <div class="col-md-12 mb-3">
     </div>
-    <div class="row mb-5">
-      <div class="col-8">
-        <div class="row">
-            <div class="col-sm">
-                GMC: {{ doctor.gmc_number }}
-            </div>
-            <div class="col-sm">
-                {{ doctor.job_title }}
-            </div>
-            <div class="col-sm">
-                {{ doctor.primary_employer }}
-            </div>
-        </div>
-      </div>
-    </div>
+  </div>
+  <h2 class="faded text-center">
+    No recent declarations
+  </h2>
+  {% endif %}
 
   {% for for_year, declarations in declarations.items %}
   <div class="resume-date text-md-right p-2">
@@ -37,6 +26,11 @@
   <div class="resume-item d-flex flex-column flex-md-row mb-5">
     <div class="p-2 flex-grow-1">
       {% for declaration in declarations %}
+        {% if declaration.nothing_to_declare %}
+        <h2>
+          Nothing to Declare
+        </h2>
+        {% endif %}
         {% display_subdeclaration_display declaration "consultancy" "consultancy_band" "consultancy_details" "pharmaceutical_companies,technology_companies,consultancy_other" %}
         {% display_subdeclaration_display declaration "academic" "academic_band" "academic_details" "research_grants,academic_other" %}
         {% display_subdeclaration_display declaration "other_work" "other_work_band" "other_work_details" "public_relations,commercial_relationships,media" %}

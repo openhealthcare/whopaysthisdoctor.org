@@ -1,0 +1,126 @@
+{% extends 'baser.html' %}
+
+{% load markdown_deux_tags %}
+{% load utils %}
+
+{% block content %}
+<section class="resume-section p-3 p-lg-5 d-flex justify-content-center" id="experience">
+  <div class="container-fluid ">
+  {% include "partials/doctor_header.html" %}
+
+  {% if not doctor.declaration_set.all %}
+  <div class="row">
+    <div class="col-md-12 mb-3">
+    </div>
+  </div>
+  <h2 class="faded text-center">
+    No archived declarations
+  </h2>
+  {% endif %}
+
+  {% for declaration in doctor.declaration_set.all %}
+  <div class="resume-date text-md-right p-2">
+    <h3>
+      <span class="text-primary">{{ declaration.date_created }}</span>
+    </h3>
+  </div>
+  <div class="resume-item d-flex flex-column flex-md-row mb-5">
+    <div class="p-2 flex-grow-1">
+      {% if declaration.nothing_to_declare %}
+      <h2>Nothing To Declare</h2>
+      {% endif %}
+
+      {% if declaration.pharmabenefit_set.count > 0 %}
+        <h4 class="mb-3">Benefits received from pharmaceutical companies</h4>
+        <table class="table">
+          <tr>
+            <th>Company</th>
+            <th>Reason for receipt of fees</th>
+            <th>Total amount received</th>
+          </tr>
+          {% for benefit in declaration.pharmabenefit_set.all %}
+            <tr>
+              <td>{{benefit.company}}</td>
+              <td>{{benefit.reason}}</td>
+              <td>{{benefit.get_band_display}}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+
+      {% if declaration.othermedicalbenefit_set.count > 0 %}
+        <h4 class="mb-3">Other sources of income or benefits from other organisations relevant to
+medical practice</h4>
+        <table class="table">
+          <tr>
+            <th>Company</th>
+            <th>Reason for receipt of fees</th>
+            <th>Total amount received</th>
+          </tr>
+          {% for benefit in declaration.othermedicalbenefit_set.all %}
+            <tr>
+              <td>{{benefit.company}}</td>
+              <td>{{benefit.reason}}</td>
+              <td>{{benefit.get_band_display}}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+
+      {% if declaration.feebenefit_set.count > 0 %}
+        <h4 class="mb-3">Fees directly received from other medical companies</h4>
+        <table class="table">
+          <tr>
+            <th>Company</th>
+            <th>Reason for receipt of fees</th>
+            <th>Total amount received</th>
+          </tr>
+          {% for benefit in declaration.feebenefit_set.all %}
+            <tr>
+              <td>{{benefit.company}}</td>
+              <td>{{benefit.reason}}</td>
+              <td>{{benefit.get_band_display}}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+
+      {% if declaration.grantbenefit_set.count > 0 %}
+        <h4 class="mb-3">Research grants paid by private institutions to your department</h4>
+        <table class="table">
+          <tr>
+            <th>Company</th>
+            <th>Reason for receipt of fees</th>
+            <th>Total amount received</th>
+          </tr>
+          {% for benefit in declaration.grantbenefit_set.all %}
+            <tr>
+              <td>{{benefit.company}}</td>
+              <td>{{benefit.reason}}</td>
+              <td>{{benefit.get_band_display}}</td>
+            </tr>
+          {% endfor %}
+        </table>
+        {% endif %}
+
+        {% if declaration.past_declarations %}
+        <h4 class="mb-3">Past Declarations</h4>
+        <p>
+          {{ declaration.past_declarations|markdown }}
+        </p>
+        {% endif %}
+        {% if declaration.other_declarations %}
+        <h4 class="mb-3">Other Declarations</h4>
+        <p>
+          {{ declaration.other_declarations|markdown }}
+        </p>
+        {% endif %}
+      </div>
+    </div>
+
+{% endfor %}
+
+  </div>
+</section>
+
+{% endblock %}

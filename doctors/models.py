@@ -20,6 +20,11 @@ class Doctor(models.Model):
     employment_address = models.TextField()
     email = models.EmailField(blank=True, null=True)
 
+    class Meta:
+        ordering = [
+            "-detaileddeclaration__dt_created", "-declaration__dt_created"
+        ]
+
     def __str__(self):
         return u'{0} - {1}'.format(self.name, self.gmc_number)
 
