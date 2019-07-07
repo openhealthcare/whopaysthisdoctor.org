@@ -2,3 +2,4 @@ __pycache__/
 *.sqlite*
 *.py[cod]
 .vscode
+whopaysthisdoctor/local_settings.py
