@@ -92,13 +92,14 @@ class DeclarationIdentityForm(forms.Form):
         4. There is no step 4.
         """
         link, created = DeclarationLink.objects.get_or_create(
-            email=self.cleaned_data['email'])
+            email=self.cleaned_data['email']
+        )
         if not created:
             link.new_key()
             if link.expired:
                 link.expire_tomorrow()
         link.send()
-        return
+        return link
 
 
 DeclarationIdentityFormSet = inlineformset_factory(
@@ -120,7 +121,6 @@ class ReEstablishIdentityForm(DeclarationIdentityForm):
 
     def clean(self):
         super(ReEstablishIdentityForm, self).clean()
-
         email, gmc = self.cleaned_data['email'], self.cleaned_data['gmc']
         doctor = Doctor.objects.get(gmc_number=gmc)
         if doctor.email != email:

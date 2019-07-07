@@ -149,3 +149,12 @@ ADMIN_SUFFIXES = [
     'openhealthcare.org.uk', 'deadpansincerity.com', 'msmith.net'
 ]
 ALL_SUFFIXES = NHS_EMAIL_SUFFIXES + ADMIN_SUFFIXES
+
+SKIP_EMAIL_VERIFICATION = False
+
+
+try:
+    from whopaysthisdoctor.local_settings import *
+except ImportError:
+    pass
+

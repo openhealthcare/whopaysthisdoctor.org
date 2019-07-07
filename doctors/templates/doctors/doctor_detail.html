@@ -27,9 +27,9 @@
     <div class="p-2 flex-grow-1">
       {% for declaration in declarations %}
         {% if declaration.nothing_to_declare %}
-        <h2>
+        <h4>
           Nothing to Declare
-        </h2>
+        </h4>
         {% endif %}
         {% display_subdeclaration_display declaration "consultancy" "consultancy_band" "consultancy_details" "pharmaceutical_companies,technology_companies,consultancy_other" %}
         {% display_subdeclaration_display declaration "academic" "academic_band" "academic_details" "research_grants,academic_other" %}

@@ -50,7 +50,9 @@ class EstablishIdentityView(FormView):
     success_url = '/declare/pending'
 
     def form_valid(self, form):
-        form.create_declaration_link()
+        link = form.create_declaration_link()
+        if settings.SKIP_EMAIL_VERIFICATION:
+            return HttpResponseRedirect(link.absolute_url())
         return super(EstablishIdentityView, self).form_valid(form)
 
 
@@ -76,7 +78,9 @@ class ReEstablishIdentityView(FormView):
         return {'gmc': self.doctor.gmc_number}
 
     def form_valid(self, form):
-        form.create_declaration_link()
+        link = form.create_declaration_link()
+        if settings.SKIP_EMAIL_VERIFICATION:
+            return HttpResponseRedirect(link.absolute_url())
         return super(ReEstablishIdentityView, self).form_valid(form)
 
 
@@ -187,8 +191,9 @@ class AbstractDeclarView():
             work_detail = work_detail_form.save(commit=False)
             work_detail.declaration = detailed_declaration
             work_detail.save()
-        if not settings.DEBUG:
-            self.link.delete()
+
+        self.link.delete()
+        if not settings.SKIP_EMAIL_VERIFICATION:
             self.object.send_declaration_thanks()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -204,6 +209,11 @@ class DeclareView(AbstractDeclarView, CreateView):
             return redirect(reverse('add', kwargs=kwargs))
         self.link = link
         return super().dispatch(*args, **kwargs)
+
+    def get_initial(self, *args, **kwargs):
+        initial = super().get_initial(*args, **kwargs)
+        initial["email"] = self.link.email
+        return initial
 
 
 class AddDeclarationView(AbstractDeclarView, UpdateView):
