@@ -26,8 +26,15 @@
   <div class="resume-item d-flex flex-column flex-md-row mb-5">
     <div class="p-2 flex-grow-1">
       {% for declaration in declarations %}
+        {% for work_detail in declaration.workdetails_set.all %}
+        <h3>{{ work_detail.position }}</h3>
+        <p class="lead">
+          {{ work_detail.details }}
+        </p>
+
+        {% endfor %}
         {% if declaration.nothing_to_declare %}
-        <h4>
+        <h4 class="mb-5">
           Nothing to Declare
         </h4>
         {% endif %}

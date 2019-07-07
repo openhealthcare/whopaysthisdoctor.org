@@ -3,7 +3,8 @@ Views relating to the register.
 """
 import datetime as dt
 import json
-import collections
+import operator
+from functools import reduce
 from django.db.models import Q
 from django.conf import settings
 from django.db import transaction
@@ -13,10 +14,6 @@ from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.edit import FormView, CreateView, UpdateView
-from extra_views import (
-    CreateWithInlinesView, InlineFormSetView, UpdateWithInlinesView
-)
-from extra_views import NamedFormsetsMixin
 
 from . import models, forms
 
@@ -82,60 +79,6 @@ class ReEstablishIdentityView(FormView):
         if settings.SKIP_EMAIL_VERIFICATION:
             return HttpResponseRedirect(link.absolute_url())
         return super(ReEstablishIdentityView, self).form_valid(form)
-
-
-class DeclarationInline(InlineFormSetView):
-    inline_model = models.Declaration
-    form_class = forms.DeclarationForm
-    max_num = 1
-
-    def get_formset_kwargs(self):
-        kw = super(DeclarationInline, self).get_formset_kwargs()
-        kw['queryset'] = models.Declaration.objects.none()
-        return kw
-
-
-class PharmaBenefitInline(InlineFormSetView):
-    inline_model = models.PharmaBenefit
-    form_class = forms.BenefitForm
-    can_delete = False
-    extra = 3
-
-    def get_formset_kwargs(self):
-        kw = super(PharmaBenefitInline, self).get_formset_kwargs()
-        kw['queryset'] = models.PharmaBenefit.objects.none()
-        return kw
-
-
-class OtherMedicalBenefitInline(InlineFormSetView):
-    inline_model = models.OtherMedicalBenefit
-    form_class = forms.BenefitForm
-    can_delete = False
-    def get_formset_kwargs(self):
-        kw = super(OtherMedicalBenefitInline, self).get_formset_kwargs()
-        kw['queryset'] = models.OtherMedicalBenefit.objects.none()
-        return kw
-
-
-class FeeBenefitInline(InlineFormSetView):
-    inline_model = models.FeeBenefit
-    form_class = forms.BenefitForm
-    can_delete = False
-    def get_formset_kwargs(self):
-        kw = super(FeeBenefitInline, self).get_formset_kwargs()
-        kw['queryset'] = models.FeeBenefit.objects.none()
-        return kw
-
-
-class GrantBenefitInline(InlineFormSetView):
-    inline_model = models.GrantBenefit
-    form_class = forms.BenefitForm
-    can_delete = False
-
-    def get_formset_kwargs(self):
-        kw = super(GrantBenefitInline, self).get_formset_kwargs()
-        kw['queryset'] = models.GrantBenefit.objects.none()
-        return kw
 
 
 class AbstractDeclarView():
@@ -277,15 +220,60 @@ class DoctorListView(ListView):
     template_name = 'doctors/doctor_list.html'
     context_object_name = 'doctors'
 
+    SEARCH_FIELDS = [
+        "name",
+        "gmc_number",
+        "job_title",
+        "primary_employer",
+        "employment_address",
+        "email",
+        "detaileddeclaration__consultancy_details",
+        "detaileddeclaration__academic_details",
+        "detaileddeclaration__other_work_details",
+        "detaileddeclaration__financial_details",
+        "detaileddeclaration__spousal_details",
+        "detaileddeclaration__sponsored_details",
+        "detaileddeclaration__political_details",
+        "detaileddeclaration__workdetails__position",
+        "detaileddeclaration__workdetails__details",
+        "declaration__past_declarations",
+        "declaration__other_declarations",
+        "declaration__pharmabenefit__company",
+        "declaration__othermedicalbenefit__company",
+        "declaration__feebenefit__company",
+        "declaration__grantbenefit__company",
+    ]
+
+    def search(self, some_query):
+        """
+        splits a string by space and queries
+        based on the search fields
+        """
+        query_values = some_query.split(" ")
+        qs = models.Doctor.objects.all()
+        for query_value in query_values:
+            q_objects = []
+            for field in self.SEARCH_FIELDS:
+                model_field = "{}__icontains".format(field)
+                q_objects.append(Q(**{model_field: query_value}))
+            qs = qs.filter(reduce(operator.or_, q_objects))
+        return qs
+
     # This is dynamic to avoid the date being process-start bounded.
     def get_queryset(self):
-        an_hour_ago = dt.datetime.now()-dt.timedelta(
-            hours=1
-        )
-        return models.Doctor.objects.filter(
-            Q(detaileddeclaration__dt_created__lte=an_hour_ago) |
-            Q(detaileddeclaration=None)
-        ).distinct().order_by(
+        query = self.request.GET.get("q")
+        if query:
+            qs = self.search(query)
+        else:
+            an_hour_ago = dt.datetime.now()-dt.timedelta(
+                hours=1
+            )
+            qs = models.Doctor.objects.filter(
+                Q(detaileddeclaration__dt_created__lte=an_hour_ago) |
+                Q(detaileddeclaration=None)
+            )
+
+        return qs.distinct().order_by(
             "-detaileddeclaration__dt_created", "-declaration__dt_created"
         )
 

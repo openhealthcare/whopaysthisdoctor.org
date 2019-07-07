@@ -6,7 +6,9 @@
     <div class="search-control">
       <label>
         Search for a doctor
-        <input type="text" id="search-field" placeholder="e.g. by surname or where they work" />
+        <form method="get">
+          <input name="q" type="text" value="{{ request.GET.q }}" id="search-field" placeholder="e.g. by surname or where they work" />
+        </form>
       </label>
     </div>
     <table class="table sortable" id="doctor-table">
