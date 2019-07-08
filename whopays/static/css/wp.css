@@ -52,6 +52,10 @@ Brand
 Navbar
 ----------*/
 
+.navbar-nav {
+    margin: 0px 0px;
+}
+
 .navbar li {
   font-size: 0.9em
 }
