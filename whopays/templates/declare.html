@@ -12,7 +12,7 @@
           <h2>Declare your interests</h2>
           <p>
             You are able to use this form to declare any financial interests in the last 12 months, or since your last
-            declaration, relating to income received other than from your "primary employer" given below. 
+            declaration, relating to income received other than from your "primary employer" given below.
 	    If in doubt, it is always best to declare income.
           </p>
         </div>
@@ -33,170 +33,127 @@
       </div>
     </div>
 
-
     <div class="row">
       <div class="box">
         <div class="col-lg-12">
           <hr />
-          <h2 class="intro-text text-center">Section 2: Declaration</h2>
+          <h2 class="intro-text text-center">Section 2: Declaration period</h2>
           <hr>
-          <p>
-            Please include the personal receipt of any benefits from a pharmaceutical company or other sources. This might include speaker’s fees, honoraria, expenses or any significant gifts or payments in kind.
-          </p>
           <div class="row">
-            <div class="form-group">
-              <label class="control-label col-sm-2 col-lg-2 ">Do you have any Financial Interests to declare?</label>
-              <div class=" col-sm-10 col-lg-10 ">
-                <div class="radio">
-                  <label class="radio">
-                    <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1" >
-                    <span class="larger">Yes</span>
-                  </label>
-                </div>
-                <div class="radio">
-                  <label class="radio">
-                    <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                    <span class="larger">No</span>
-                  </label>
-                </div>
-              </div>
-            </div>
+            <select name="detaileddeclaration_set-0-for_year" class="form-control" id="id_detaileddeclaration_set-0-for_year">
+              <option value="2019">2019</option>
+
+              <option value="2018">2018</option>
+
+              <option value="2017">2017</option>
+
+              <option value="2016">2016</option>
+
+              <option value="2015">2015</option>
+
+              <option value="2014">2014</option>
+
+              <option value="2013">2013</option>
+
+              <option value="2012">2012</option>
+
+              <option value="2011">2011</option>
+
+              <option value="2010">2010</option>
+            </select>
           </div>
         </div>
       </div>
     </div>
 
-    <div id="declarations" class="hidden">
-
-      <div class="row">
-        <div class="box">
-          <div class="col-lg-12">
-            <hr />
-            <h2 class="intro-text text-center">Section 3: Benefits received from pharmaceutical companies</h2>
-            {% if PharmaBenefits.errors or PharmaBenefits.non_form_errors %}
-              {{ PharmaBenefits.errors }}
-              {{ PharmaBenefits.non_form_errors }}
-            {% endif %}
-            {{ PharmaBenefits.management_form }}
-            {% for f in PharmaBenefits %}
-              <hr />
-              <div class="row pharma-form" >
-                {{ f|bootstrap_horizontal }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="box">
-          <div class="col-lg-12">
-            <hr />
-            <h2 class="intro-text text-center">Section 4: Other sources of income or benefits from other organisations relevant to
-              medical practice</h2>
-              <hr />
-            <p>
-              Please include any fees or benefits, similar to in Section 3, received from companies directly involved in
-              healthcare. For instance, this might include manufacturers of medical devices, diagnostic technology, or health-
-              related Public Relations companies.
-            </p>
-            {{ OtherMedicalBenefits.management_form }}
-            {% for f in OtherMedicalBenefits %}
-              <hr />
-              <div class="row othermedical-form">
-                {{ f|bootstrap_horizontal }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="box">
-          <div class="col-lg-12">
-            <hr />
-            <h2 class="intro-text text-center">Section 5: Other financial interests that might be of relevance</h2>
-            <hr />
-            <p>
-              This might include employment or sources of income other than your main employer given in section 1, for
-              example, shares in companies, patents, a role in a private medical company, or media related work.
-            </p>
-            {{ FeeBenefits.management_form }}
-            {% for f in FeeBenefits %}
-              <hr />
-              <div class="row feebenefits-form">
-                {{ f|bootstrap_horizontal }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="box">
-          <div class="col-lg-12">
-            <hr />
-            <h2 class="intro-text text-center">Section 6:  Research grants paid by private institutions to your department</h2>
-            <hr />
-            <p>
-              This section only relates to research grants received where you have direct involvement in the work related to the
-              receipt of funds paid to your department.
-            </p>
-            {{ GrantBenefits.management_form }}
-            {% for f in GrantBenefits %}
-              <hr />
-              <div class="row grantbenefits-form">
-                {{ f|bootstrap_horizontal }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-      </div>
-
-      <!-- Declarations are slightly weird. -->
-      {% if Declaration.errors or Declaration.non_form_errors %}
-        {{ Declaration.errors }}
-        {{ Declaration.non_form_errors }}
-      {% endif %}
-      {{ Declaration.management_form }}
-      {% for f in Declaration %}
-        {% if forloop.first %}
-          <div class="row">
-            <div class="box">
-              <div class="col-lg-12">
-                <hr />
-                <h2 class="intro-text text-center">Section 7: Past Declarations</h2>
-                <hr>
-                <p>
-                  If this is one of your first annual declarations, you may wish to link to other recent declarations of interest. General
-                  opinion is that interests in the previous 3-5 years should be declared.
-                </p>
-                <div class="row">
-                  {{ f.past_declarations|bootstrap_horizontal }}
-                </div>
-              </div>
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <hr />
+          <h2 class="intro-text text-center">
+            Section 3: Employment Details
+          </h2>
+          {{ workdetailsinline.management_form }}
+          {% for form in workdetailsinline.forms %}
+            <div class="row work-details">
+              {{ form.position| bootstrap_horizontal }}
+              {{ form.details | bootstrap_horizontal }}
             </div>
-          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
 
-          <div class="row">
-            <div class="box">
-              <div class="col-lg-12">
-                <hr />
-                <h2 class="intro-text text-center">Section 8: Other Declarations</h2>
-                <hr>
-                <p>
-                  This section is simply to provide space for any other declaration you may wish to make.
-                </p>
-                <div class="row">
-                  {{ f.other_declarations|bootstrap_horizontal }}
-                </div>
-              </div>
+    <div class="row">
+      <div class="box">
+        <div class="col-lg-12">
+          <hr />
+          <h2 class="intro-text text-center">
+            Section 3: Declarations
+          </h2>
+          <p>
+            <button value="1" name="detaileddeclaration_set-0-nothing_to_declare" class="btn btn-default" type="submit">Nothing to declare.</button>
+          </p>
+
+          {{ detaileddeclarationinline.management_form }}
+
+          {% for form in detaileddeclarationinline.forms %}
+            <div class="row">
+            {{ form.consultancy | bootstrap_horizontal }}
+            {{ form.pharmaceutical_companies | bootstrap_horizontal }}
+            {{ form.consultancy_other | bootstrap_horizontal }}
+            {{ form.consultancy_details | bootstrap_horizontal }}
+            {{ form.consultancy_band | bootstrap_horizontal }}
             </div>
-          </div>
-        {% endif %}
-      {% endfor %}
+            <div class="row">
+              {{ form.academic | bootstrap_horizontal }}
+              {{ form.research_grants | bootstrap_horizontal }}
+              {{ form.academic_other | bootstrap_horizontal }}
+              {{ form.academic_details | bootstrap_horizontal }}
+              {{ form.academic_band | bootstrap_horizontal }}
+            </div>
 
-    </div><!--declarations-->
+            <div class="row">
+              {{ form.other_work | bootstrap_horizontal }}
+              {{ form.public_relations | bootstrap_horizontal }}
+              {{ form.commercial_relationships | bootstrap_horizontal }}
+              {{ form.media | bootstrap_horizontal }}
+              {{ form.other_work_details | bootstrap_horizontal }}
+              {{ form.other_work_band | bootstrap_horizontal }}
+            </div>
+
+            <div class="row">
+              {{ form.financial | bootstrap_horizontal }}
+              {{ form.patents_owned | bootstrap_horizontal }}
+              {{ form.financial_details | bootstrap_horizontal }}
+              {{ form.financial_band | bootstrap_horizontal }}
+            </div>
+
+            <div class="row">
+              {{ form.spousal | bootstrap_horizontal }}
+              {{ form.spousal_details | bootstrap_horizontal }}
+              {{ form.spousal_band | bootstrap_horizontal }}
+            </div>
+
+            <div class="row">
+              {{ form.sponsored | bootstrap_horizontal }}
+              {{ form.conferences | bootstrap_horizontal }}
+              {{ form.meals | bootstrap_horizontal }}
+              {{ form.sponsored_details | bootstrap_horizontal }}
+              {{ form.sponsored_band | bootstrap_horizontal }}
+            </div>
+
+            <div class="row">
+              {{ form.political | bootstrap_horizontal }}
+              {{ form.political_details | bootstrap_horizontal }}
+              {{ form.political_band | bootstrap_horizontal }}
+            </div>
+
+          {% endfor %}
+
+        </div>
+      </div>
+    </div>
 
 
     <div class="row">
@@ -218,16 +175,28 @@
 {% block extrajs %}
   <script type="text/javascript" src="/static/jquery.formset.js"></script>
   <script type="text/javascript">
-    $(document).ready(function(){
-    $('input[type=radio]').change( function() {
-    $('#declarations').toggleClass('hidden');
-    });
+    // var displaySubsections = function($el){
+    //     if($el.prop("checked")){
+    //       $el.closest(".sub-section-title").parent().addClass("show");
+    //     }
+    //     else{
+    //       $el.closest(".sub-section-title").parent().removeClass("show");
+    //     }
+    // }
 
-    $('.pharma-form').formset({prefix:'{{PharmaBenefits.prefix}}', addCssClass: 'btn btn-default'});
-    $('.othermedical-form').formset({prefix:'{{OtherMedicalBenefits.prefix}}', addCssClass: 'btn btn-default'});
-    $('.feebenefits-form').formset({prefix:'{{FeeBenefits.prefix}}', addCssClass: 'btn btn-default'});
-    $('.grantbenefits-form').formset({prefix:'{{GrantBenefits.prefix}}', addCssClass: 'btn btn-default'});
+    $(document).ready(function(){
+
+    // Add many for the work details
+    $('.work-details').formset({prefix:'{{WorkDetails.prefix}}', addCssClass: 'btn btn-default'});
+
+    // $(".sub-section-title input").each(function(i, el){
+    //   displaySubsections($(el))
+    // });
+
+    // $(".sub-section-title input").change(function(){
+    //   var $this = $(this);
+    //   displaySubsections($this);
+    // });
     });
   </script>
-
 {% endblock %}

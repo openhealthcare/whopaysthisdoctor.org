@@ -43,17 +43,21 @@ class Doctor(models.Model):
         Explaining that if this is their frist submission it will not
         turn up for 24 hours, and with a link.
         """
-        class Message(WPTDMessage):
-            To       = self.email
-            Subject  = 'Who Pays This Doctor - Thanks for your declaration'
-            Template = 'email/declaration_thanks'
-            Context  = {
-                'doctor'   : self,
-                'settings' : settings,
-                'register' : reverse('doctor-list')
+        if settings.DEBUG:
+            print("=" * 20)
+            print("email sent")
+            print("=" * 20)
+        else:
+            send_mail(
+                to_emails=[self.email],
+                subject="Who Pays This Doctor - Thanks for your declaration",
+                template="email/declaration_thanks.html",
+                template_context={
+                    "settings": settings,
+                    "doctor": self,
+                    "register": reverse('doctor-list')
                 }
-
-        Message.send()
+            )
         return
 
 
@@ -187,3 +191,197 @@ class DeclarationLink(models.Model):
         self.key = random_token()[:8]
         self.save()
         return
+
+
+class WorkDetails(models.Model):
+    CAREER_CHOICES = (
+        ("Academic", "Academic"),
+        ("NHS", "NHS"),
+        ("Private clinical work", "Private clinical work")
+    )
+    dt_created = models.DateTimeField(auto_now_add=True)
+    declaration = models.ForeignKey(
+        "DetailedDeclaration", on_delete=models.CASCADE
+    )
+    position = models.CharField(
+        choices=CAREER_CHOICES,
+        max_length=256
+    )
+    details = models.TextField(blank=True)
+
+
+class DetailedDeclaration(models.Model):
+    BAND_CHOICES = (
+        (
+            u'under \u00a3100',
+            u'under \u00a3100'
+        ),
+        (
+            u'\u00a3100- \u00a31000',
+            u'\u00a3100- \u00a31000'
+        ),
+        (
+            u'\u00a31000- \u00a32000',
+            u'\u00a31000- \u00a32000'
+        ),
+        (
+            u'\u00a32000 - \u00a35000',
+            u'\u00a32000 - \u00a35000'
+        ),
+        (
+            u'\u00a35000 - \u00a310000',
+            u'\u00a35000 - \u00a310000'
+        ),
+        (
+            u'\u00a310000 - \u00a350 000',
+            u'\u00a310000 - \u00a350 000'
+        ),
+        (
+            u'\u00a350000- \u00a3100000',
+            u'\u00a350000- \u00a3100000'
+        ),
+        (
+            u'\u00a3100000+',
+            u'\u00a3100000+'
+        )
+    )
+
+    dt_created = models.DateTimeField(auto_now_add=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    for_year = models.IntegerField()
+    nothing_to_declare = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-for_year", "-dt_created"]
+
+    # Consultancy categories
+    consultancy = models.BooleanField(default=False)
+    consultancy_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    pharmaceutical_companies = models.BooleanField(default=False)
+    technology_companies = models.BooleanField(default=False)
+    consultancy_other = models.BooleanField(
+        default=False, verbose_name="other"
+    )
+    consultancy_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Academic categories
+    academic = models.BooleanField(
+        default=False,
+        verbose_name="academic_relationships"
+    )
+    academic_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    research_grants = models.BooleanField(default=False)
+    academic_other = models.BooleanField(default=False)
+    academic_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Other work categories
+    other_work = models.BooleanField(default=False)
+    other_work_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    public_relations = models.BooleanField(default=False)
+    commercial_relationships = models.BooleanField(default=False)
+    media = models.BooleanField(default=False)
+    other_work_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Financial categories
+    financial = models.BooleanField(default=False)
+    financial_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    patents_owned = models.BooleanField(
+        default=False, verbose_name="patents owned/part owned"
+    )
+    shares = models.BooleanField(
+        default=False, verbose_name="shares/stocks/company ownership"
+    )
+    financial_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Spousal/family
+    spousal = models.BooleanField(
+        default=False, verbose_name="spousal/family"
+    )
+    spousal_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    spousal_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Sponsored/educational events
+    sponsored = models.BooleanField(
+        default=False,
+        verbose_name="sponsored/educational events"
+    )
+    sponsored_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    conferences = models.BooleanField(
+        default=False
+    )
+    meals = models.BooleanField(
+        default=False,
+        verbose_name="meals/hospitality/travel"
+    )
+    sponsored_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # political affiliations
+    political = models.BooleanField(
+        default=False,
+        verbose_name="political/membership organisations of note"
+    )
+    political_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    political_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )

@@ -1,0 +1,126 @@
+{% load markdown_deux_tags %}
+
+    {% for declaration in doctor.declaration_set.all %}
+      <div class="row">
+        <div class="box">
+          <div class="col-lg-12">
+            <hr>
+            <h2 class="intro-text text-center">{{ declaration.date_created }}</h2>
+            <hr />
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="box">
+          <div class="col-lg-12">
+
+            {% if declaration.nothing_to_declare %}
+              <hr />
+              <h2 class="intro-text text-center">Nothing To Declare</h2>
+              <hr />
+            {% endif %}
+
+            {% if declaration.pharmabenefit_set.count > 0 %}
+              <hr>
+              <h2 class="intro-text text-center">Benefits received from pharmaceutical companies</h2>
+              <hr />
+              <table class="table">
+                <tr>
+                  <th>Company</th>
+                  <th>Reason for receipt of fees</th>
+                  <th>Total amount received</th>
+                </tr>
+                {% for benefit in declaration.pharmabenefit_set.all %}
+                  <tr>
+                    <td>{{benefit.company}}</td>
+                    <td>{{benefit.reason}}</td>
+                    <td>{{benefit.get_band_display}}</td>
+                  </tr>
+                {% endfor %}
+              </table>
+              {% endif %}
+
+            {% if declaration.othermedicalbenefit_set.count > 0 %}
+              <hr>
+              <h2 class="intro-text text-center">Other sources of income or benefits from other organisations relevant to
+medical practice</h2>
+              <hr />
+              <table class="table">
+                <tr>
+                  <th>Company</th>
+                  <th>Reason for receipt of fees</th>
+                  <th>Total amount received</th>
+                </tr>
+                {% for benefit in declaration.othermedicalbenefit_set.all %}
+                  <tr>
+                    <td>{{benefit.company}}</td>
+                    <td>{{benefit.reason}}</td>
+                    <td>{{benefit.get_band_display}}</td>
+                  </tr>
+                {% endfor %}
+              </table>
+              {% endif %}
+
+            {% if declaration.feebenefit_set.count > 0 %}
+              <hr>
+              <h2 class="intro-text text-center">Fees directly received from other medical companies</h2>
+              <hr />
+              <table class="table">
+                <tr>
+                  <th>Company</th>
+                  <th>Reason for receipt of fees</th>
+                  <th>Total amount received</th>
+                </tr>
+                {% for benefit in declaration.feebenefit_set.all %}
+                  <tr>
+                    <td>{{benefit.company}}</td>
+                    <td>{{benefit.reason}}</td>
+                    <td>{{benefit.get_band_display}}</td>
+                  </tr>
+                {% endfor %}
+              </table>
+              {% endif %}
+
+            {% if declaration.grantbenefit_set.count > 0 %}
+              <hr>
+              <h2 class="intro-text text-center">Research grants paid by private institutions to your department</h2>
+              <hr />
+              <table class="table">
+                <tr>
+                  <th>Company</th>
+                  <th>Reason for receipt of fees</th>
+                  <th>Total amount received</th>
+                </tr>
+                {% for benefit in declaration.grantbenefit_set.all %}
+                  <tr>
+                    <td>{{benefit.company}}</td>
+                    <td>{{benefit.reason}}</td>
+                    <td>{{benefit.get_band_display}}</td>
+                  </tr>
+                {% endfor %}
+              </table>
+              {% endif %}
+
+              {% if declaration.past_declarations %}
+              <hr>
+              <h2 class="intro-text text-center">Past Declarations</h2>
+              <hr />
+              <p>
+                {{ declaration.past_declarations|markdown }}
+              </p>
+              {% endif %}
+              {% if declaration.other_declarations %}
+              <hr>
+              <h2 class="intro-text text-center">Other Declarations</h2>
+              <hr />
+              <p>
+                {{ declaration.other_declarations|markdown }}
+              </p>
+              {% endif %}
+
+            </div>
+          </div>
+        </div>
+
+    {% endfor %}

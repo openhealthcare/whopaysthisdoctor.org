@@ -202,6 +202,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
 
+SKIP_EMAIL_VERIFICATION = False
+
 # EMAIL_HOST_USER = os.environ.get('MANDRILL_USERNAME', '')
 # EMAIL_HOST = 'smtp.mandrillapp.com'
 # EMAIL_PORT = 587

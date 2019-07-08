@@ -18,6 +18,9 @@ class FeeBenefitInline(admin.StackedInline):
 class GrantBenefitInline(admin.StackedInline):
     model = models.GrantBenefit
 
+class WorkDetailsInline(admin.StackedInline):
+    model = models.WorkDetails
+
 class DoctorAdmin(VersionAdmin):
     pass
 
@@ -32,6 +35,12 @@ class DeclarationLinkAdmin(admin.ModelAdmin):
     search_fields = ['email']
     list_display = ['email', 'expires', 'key']
 
+
+class DetailedDeclarationAdmin(VersionAdmin):
+    inlines = (WorkDetailsInline,)
+    search_fields = ['doctor__name']
+
+admin.site.register(models.DetailedDeclaration, DetailedDeclarationAdmin)
 admin.site.register(models.Doctor, DoctorAdmin)
 admin.site.register(models.Declaration, DeclarationAdmin)
 admin.site.register(models.DeclarationLink, DeclarationLinkAdmin)

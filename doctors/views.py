@@ -3,12 +3,15 @@ Views relating to the register.
 """
 import datetime as dt
 
+from django.conf import settings
+from django.db import transaction
+from django.db.models import Q
 from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
 from django.views.generic import ListView, DetailView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, CreateView, UpdateView
 from extra_views import CreateWithInlinesView, InlineFormSet, UpdateWithInlinesView
 from extra_views import NamedFormsetsMixin
 import json
@@ -119,29 +122,184 @@ class GrantBenefitInline(InlineFormSet):
         return kw
 
 
-class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
-    """
-    Declaring your interests
-    """
-    template_name = 'declare.html'
+# class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
+#     """
+#     Declaring your interests
+#     """
+#     template_name = 'declare.html'
+#     model = models.Doctor
+#     form_class = forms.DoctorForm
+
+#     inlines = [
+#         DeclarationInline,
+#         PharmaBenefitInline,
+#         OtherMedicalBenefitInline,
+#         FeeBenefitInline,
+#         GrantBenefitInline
+#         ]
+#     inlines_names = [
+#         'Declaration',
+#         'PharmaBenefits',
+#         'OtherMedicalBenefits',
+#         'FeeBenefits',
+#         'GrantBenefits'
+#         ]
+
+#     def dispatch(self, *args, **kwargs):
+#         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
+#         if link.expires < timezone.now():
+#             raise Http404
+#         doctor = models.Doctor.objects.filter(email=link.email).count()
+#         if doctor > 0:
+#             kwargs['pk'] = models.Doctor.objects.get(email=link.email).pk
+#             return redirect(reverse('add', kwargs=kwargs))
+#         self.link = link
+#         return super(DeclareView, self).dispatch(*args, **kwargs)
+
+#     def forms_valid(self, form, inlines):
+#         """
+#         If the form and formsets are valid, save the associated models.
+#         """
+#         self.object = form.save()
+#         self.object.email = self.link.email
+#         self.object.save()
+
+#         for formset in inlines:
+#             formset.save()
+#         for formset in inlines:
+#             if formset.model == models.Declaration:
+#                 try:
+#                     self.declaration = formset.new_objects[0]
+#                 except IndexError:
+#                     self.declaration = models.Declaration(doctor=self.object)
+#                     self.declaration.save()
+
+#         for formset in inlines:
+#             for benefit in formset.new_objects:
+#                 benefit.declaration = self.declaration
+#                 benefit.save()
+
+#         self.link.delete()
+#         self.object.send_declaration_thanks()
+#         return HttpResponseRedirect(self.get_success_url())
+
+
+# class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
+#     """
+#     Declaring your interests
+#     """
+#     template_name = 'declare.html'
+#     model = models.Doctor
+#     form_class = forms.DoctorForm
+
+#     inlines = [
+#          DeclarationInline,
+#          PharmaBenefitInline,
+#          OtherMedicalBenefitInline,
+#          FeeBenefitInline,
+#          GrantBenefitInline
+#          ]
+#     inlines_names = [
+#         'Declaration',
+#         'PharmaBenefits',
+#         'OtherMedicalBenefits',
+#         'FeeBenefits',
+#         'GrantBenefits'
+#         ]
+
+#     def dispatch(self, *args, **kwargs):
+#         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
+#         if link.expires < timezone.now():
+#             raise Http404
+#         self.link = link
+#         return super(AddDeclarationView, self).dispatch(*args, **kwargs)
+
+#     def forms_valid(self, form, inlines):
+#         """
+#         If the form and formsets are valid, save the associated models.
+#         """
+#         self.object = form.save()
+#         for formset in inlines:
+#             formset.save()
+#         for formset in inlines:
+#             if formset.model == models.Declaration:
+#                 try:
+#                     self.declaration = formset.new_objects[0]
+#                 except IndexError:
+#                     self.declaration = models.Declaration(doctor=self.object)
+#                     self.declaration.save()
+
+#         for formset in inlines:
+#             for benefit in formset.new_objects:
+#                 benefit.declaration = self.declaration
+#                 benefit.save()
+
+#         self.link.delete()
+#         self.object.send_declaration_thanks()
+#         return HttpResponseRedirect(self.get_success_url())
+
+
+class AbstractDeclarView():
     model = models.Doctor
-    form_class = forms.DoctorForm
+    template_name = 'declare.html'
+    fields = '__all__'
 
-    inlines = [
-        DeclarationInline,
-        PharmaBenefitInline,
-        OtherMedicalBenefitInline,
-        FeeBenefitInline,
-        GrantBenefitInline
-        ]
-    inlines_names = [
-        'Declaration',
-        'PharmaBenefits',
-        'OtherMedicalBenefits',
-        'FeeBenefits',
-        'GrantBenefits'
-        ]
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        if self.request.POST:
+            data['detaileddeclarationinline'] = forms.DeclarationIdentityFormSet(
+                self.request.POST
+            )
+        else:
+            data['detaileddeclarationinline'] = forms.DeclarationIdentityFormSet()
 
+        if self.request.POST:
+            data['workdetailsinline'] = forms.WorkDetailsFormSet(
+                self.request.POST
+            )
+        else:
+            data['workdetailsinline'] = forms.WorkDetailsFormSet()
+
+        return data
+
+    def is_valid(self):
+        form = self.get_form()
+        if not form.is_valid():
+            return False
+        context = self.get_context_data()
+        detailed_declaration = context['detaileddeclarationinline']
+        work_details = context['workdetailsinline']
+        if not detailed_declaration.is_valid():
+            return False
+        if not work_details.is_valid():
+            return False
+        return True
+
+    @transaction.atomic
+    def form_valid(self, form):
+        context = self.get_context_data()
+        detailed_declarations = context['detaileddeclarationinline']
+        work_details = context['workdetailsinline']
+        if not self.is_valid():
+            return self.form_invalid(form)
+
+        self.object = form.save()
+        detailed_declaration_form = detailed_declarations[0]
+        detailed_declaration = detailed_declaration_form.save(commit=False)
+        detailed_declaration.doctor = self.object
+        detailed_declaration.save()
+        for work_detail_form in work_details:
+            work_detail = work_detail_form.save(commit=False)
+            work_detail.declaration = detailed_declaration
+            work_detail.save()
+
+        self.link.delete()
+        if not settings.SKIP_EMAIL_VERIFICATION:
+            self.object.send_declaration_thanks()
+        return HttpResponseRedirect(self.get_success_url())
+
+
+class DeclareView(AbstractDeclarView, CreateView):
     def dispatch(self, *args, **kwargs):
         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
         if link.expires < timezone.now():
@@ -151,94 +309,48 @@ class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
             kwargs['pk'] = models.Doctor.objects.get(email=link.email).pk
             return redirect(reverse('add', kwargs=kwargs))
         self.link = link
-        return super(DeclareView, self).dispatch(*args, **kwargs)
+        return super().dispatch(*args, **kwargs)
 
-    def forms_valid(self, form, inlines):
-        """
-        If the form and formsets are valid, save the associated models.
-        """
-        self.object = form.save()
-        self.object.email = self.link.email
-        self.object.save()
-
-        for formset in inlines:
-            formset.save()
-        for formset in inlines:
-            if formset.model == models.Declaration:
-                try:
-                    self.declaration = formset.new_objects[0]
-                except IndexError:
-                    self.declaration = models.Declaration(doctor=self.object)
-                    self.declaration.save()
-
-        for formset in inlines:
-            for benefit in formset.new_objects:
-                benefit.declaration = self.declaration
-                benefit.save()
-
-        self.link.delete()
-        self.object.send_declaration_thanks()
-        return HttpResponseRedirect(self.get_success_url())
+    def get_initial(self, *args, **kwargs):
+        initial = super().get_initial(*args, **kwargs)
+        initial["email"] = self.link.email
+        return initial
 
 
-class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
-    """
-    Declaring your interests
-    """
-    template_name = 'declare.html'
-    model = models.Doctor
-    form_class = forms.DoctorForm
-
-    inlines = [
-         DeclarationInline,
-         PharmaBenefitInline,
-         OtherMedicalBenefitInline,
-         FeeBenefitInline,
-         GrantBenefitInline
-         ]
-    inlines_names = [
-        'Declaration',
-        'PharmaBenefits',
-        'OtherMedicalBenefits',
-        'FeeBenefits',
-        'GrantBenefits'
-        ]
-
+class AddDeclarationView(AbstractDeclarView, UpdateView):
     def dispatch(self, *args, **kwargs):
         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
         if link.expires < timezone.now():
             raise Http404
         self.link = link
-        return super(AddDeclarationView, self).dispatch(*args, **kwargs)
-
-    def forms_valid(self, form, inlines):
-        """
-        If the form and formsets are valid, save the associated models.
-        """
-        self.object = form.save()
-        for formset in inlines:
-            formset.save()
-        for formset in inlines:
-            if formset.model == models.Declaration:
-                try:
-                    self.declaration = formset.new_objects[0]
-                except IndexError:
-                    self.declaration = models.Declaration(doctor=self.object)
-                    self.declaration.save()
-
-        for formset in inlines:
-            for benefit in formset.new_objects:
-                benefit.declaration = self.declaration
-                benefit.save()
-
-        self.link.delete()
-        self.object.send_declaration_thanks()
-        return HttpResponseRedirect(self.get_success_url())
+        return super().dispatch(*args, **kwargs)
 
 
 class DoctorDetailView(DetailView):
-    queryset = models.Doctor.objects.all()
+    model = models.Doctor
     context_object_name = 'doctor'
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super().get_context_data(*args, **kwargs)
+        declarations = self.object.detaileddeclaration_set.order_by(
+            "-for_year"
+        )
+        # python 3.7 dicts maintain order!
+        ctx["declarations"] = {}
+        for declaration in declarations:
+            if declaration.for_year not in ctx["declarations"]:
+                ctx["declarations"][declaration.for_year] = []
+
+            ctx["declarations"][declaration.for_year].append(
+                declaration
+            )
+        return ctx
+
+
+class DoctorDetailArchivedView(DetailView):
+    model = models.Doctor
+    context_object_name = 'doctor'
+    template_name = "doctors/doctor_detail_archived.html"
 
 
 class DoctorJSONView(DetailView):
@@ -255,8 +367,11 @@ class DoctorListView(ListView):
     # This is dynamic to avoid the date being process-start bounded.
     def get_queryset(self):
         an_hour_ago = dt.datetime.now()-dt.timedelta(hours=1)
-        return models.Doctor.objects.filter(
-            declaration__dt_created__lte=an_hour_ago
-        ).distinct().order_by(
-            "-declaration__dt_created"
+        qs = models.Doctor.objects.filter(
+            Q(detaileddeclaration__dt_created__lte=an_hour_ago) |
+            Q(detaileddeclaration=None)
+        )
+
+        return qs.distinct().order_by(
+            "-detaileddeclaration__dt_created", "-declaration__dt_created"
         )
