@@ -2,43 +2,70 @@
 Urls for Whopays This Doctor
 """
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from django.conf.urls import patterns, include, url
+from django.urls import include, path
 from django.views.generic import TemplateView
+from . import views
 
 from django.contrib import admin
 admin.autodiscover()
 
-import doctors
-from whopays import views
+import doctors.views
 
-urlpatterns = patterns(
-    '',
+urlpatterns = [
     # Generic Website Tat
-    url(r'^$', views.HomeView.as_view(), name='home'),
-    url(r'^about/?$', views.AboutView.as_view(), name='about'),
-    url(r'contact$', views.WPContactView.as_view(), name='contact'),
-    url(r'contact-ta$', TemplateView.as_view(template_name='contact-ta.html'),
-        name='contact-ta'),
-
+    path('', views.HomeView.as_view(), name='home'),
+    path('about', views.AboutView.as_view(), name='about'),
+    path('contact', TemplateView.as_view(template_name='contact.html'), name="contact"),
     # Making declarations
-    url(r'^declare/?$', doctors.views.EstablishIdentityView.as_view(), name='establish-identity'),
-    url(r'^restablish-identity/(?P<pk>\d+)?$', doctors.views.ReEstablishIdentityView.as_view(),
-        name='re-establish-identity'),
-    url(r'^declare/pending?$', TemplateView.as_view(template_name='identity_pending.html'),
-        name='identity-pending'),
-    url(r'^re-establish/pending$', TemplateView.as_view(template_name='identity_pending.html'),
-        name='re-establish-identity-pending'),
+    path(
+        'declare',
+        doctors.views.EstablishIdentityView.as_view(),
+        name='establish-identity'
+    ),
+    path(
+        'restablish-identity/<pk>',
+        doctors.views.ReEstablishIdentityView.as_view(),
+        name='re-establish-identity'
+    ),
+    path(
+        'declare/pending',
+        TemplateView.as_view(template_name='identity_pending.html'),
+        name='identity-pending'
+    ),
+    path(
+        're-establish/pending',
+        TemplateView.as_view(template_name='identity_pending.html'),
+        name='re-establish-identity-pending'
+    ),
 
-    url(r'^declare/(?P<key>[0-9a-z]+)$', doctors.views.DeclareView.as_view(), name='declare'),
+    path(
+        'declare/<slug:key>',
+        doctors.views.DeclareView.as_view(), name='declare'
+    ),
 
-    url(r'^declare/(?P<pk>\d+)/add/(?P<key>[0-9a-z]+)/?$', doctors.views.AddDeclarationView.as_view(), name='add'),
+    path(
+        'declare/<pk>/add/<slug:key>/',
+        doctors.views.AddDeclarationView.as_view(),
+        name='add'
+    ),
 
     # Register of conflicts of interest
-    url(r'^doctor/(?P<pk>\d+)/?$', doctors.views.DoctorDetailView.as_view(), name='doctor-detail'),
-    url(r'^doctor/(?P<pk>\d+)[.]json$', doctors.views.DoctorJSONView.as_view(), name='doctor-json'),
-    url(r'^doctors/?$', doctors.views.DoctorListView.as_view(), name='doctor-list'),
-
-    url(r'^admin/', include(admin.site.urls)),
-)
+    path(
+        'doctor/<pk>/active',
+        doctors.views.DoctorDetailView.as_view(),
+        name='doctor-detail'
+    ),
+    path(
+        'doctor/<pk>.json',
+        doctors.views.DoctorJSONView.as_view(),
+        name='doctor-json'
+    ),
+    path(
+        'doctors/',
+        doctors.views.DoctorListView.as_view(),
+        name='doctor-list'
+    ),
+    path('admin/', admin.site.urls),
+]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -6,16 +6,11 @@ import hashlib
 import random
 
 from django.conf import settings
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.db import models
 from django.utils import timezone
-import letter
 
-POSTIE = letter.DjangoPostman()
-
-class WPTDMessage(letter.Letter):
-    Postie   = POSTIE
-    From     = settings.DEFAULT_FROM_EMAIL
+from doctors import send_mail
 
 
 class Doctor(models.Model):
@@ -63,12 +58,12 @@ class Doctor(models.Model):
 
 
 class Declaration(models.Model):
-    doctor = models.ForeignKey(Doctor)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     interests = models.BooleanField(default=False)
     past_declarations = models.TextField(blank=True, null=True)
     other_declarations = models.TextField(blank=True, null=True)
-    date_created = models.DateField(default=lambda: dt.date.today())
-    dt_created = models.DateTimeField(default=lambda: dt.datetime.now())
+    date_created = models.DateField(default=dt.date.today)
+    dt_created = models.DateTimeField(default=dt.datetime.now)
 
     def __unicode__(self):
         return u'{0} - {1}'.format(getattr(self, 'doctor', 'Declaration'),
@@ -101,9 +96,6 @@ class Declaration(models.Model):
 class Benefit(models.Model):
     BAND_CHOICES = (
         (1, u'under \u00a3100'),
-        (2, u'\u00a3100- \u00a31000'),
-        (3, u'\u00a31000- \u00a32000'),
-        (4, u'\u00a32000 - \u00a35000'),
         (5, u'\u00a35000 - \u00a310000'),
         (6, u'\u00a310000 - \u00a350 000'),
         (7, u'\u00a350000- \u00a3100000'),
@@ -113,8 +105,11 @@ class Benefit(models.Model):
     class Meta:
         abstract = True
 
-    doctor = models.ForeignKey(Doctor)
-    declaration = models.ForeignKey(Declaration, blank=True, null=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    declaration = models.ForeignKey(
+        Declaration, blank=True, null=True,
+        on_delete=models.SET_NULL
+    )
     company = models.CharField(max_length=200)
     reason = models.CharField(max_length=200)
     band = models.IntegerField(choices=BAND_CHOICES)
@@ -135,7 +130,7 @@ def random_token(extra=None, hash_func=hashlib.sha256):
     if extra is None:
         extra = []
     bits = extra + [str(random.SystemRandom().getrandbits(512))]
-    return hash_func("".join(bits).encode('utf-8')).hexdigest()
+    return hash_func("".join(bits).encode('utf-8')).hexdigest()[:8]
 
 def in_one_day():
     now = dt.datetime.now()
@@ -151,7 +146,7 @@ def in_two_weeks():
 class DeclarationLink(models.Model):
     email = models.EmailField(unique=True)
     expires = models.DateTimeField(default=in_two_weeks)
-    key = models.CharField(max_length=64, unique=True, default=lambda: random_token()[:8])
+    key = models.CharField(max_length=64, unique=True, default=random_token)
 
     @property
     def expired(self):
@@ -174,15 +169,19 @@ class DeclarationLink(models.Model):
         """
         Send the link to this email.
         """
-        class Message(WPTDMessage):
-            To       = self.email
-            Subject  = 'Who Pays This Doctor - Edit your public record'
-            Template = 'email/edit_public_record'
-            Context  = {
-                'link'       : self,
+        if settings.DEBUG:
+            print("=" * 20)
+            print(self.absolute_url())
+            print("=" * 20)
+        else:
+            send_mail(
+                to_emails=[self.email],
+                subject='Who Pays This Doctor - Edit your public record',
+                template="email/edit_public_record.html",
+                template_context={
+                    "link": self,
                 }
-
-        Message.send()
+            )
 
     def new_key(self):
         self.key = random_token()[:8]

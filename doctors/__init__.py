@@ -1,1 +1,0 @@
-from doctors import views

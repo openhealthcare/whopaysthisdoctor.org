@@ -3,7 +3,7 @@ Views relating to the register.
 """
 import datetime as dt
 
-from django.core.urlresolvers import reverse_lazy, reverse
+from django.urls import reverse_lazy, reverse
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.utils import timezone
@@ -11,7 +11,7 @@ from django.views.generic import ListView, DetailView
 from django.views.generic.edit import FormView
 from extra_views import CreateWithInlinesView, InlineFormSet, UpdateWithInlinesView
 from extra_views import NamedFormsetsMixin
-import simplejson
+import json
 
 from doctors import models, forms
 
@@ -21,7 +21,7 @@ class JsonResponse(HttpResponse):
     """
     def __init__(self, content, mimetype='application/json', status=None, content_type=None):
         super(JsonResponse, self).__init__(
-            content=simplejson.dumps(content),
+            content=json.dumps(content),
             mimetype=mimetype,
             status=status,
             content_type=content_type,
@@ -60,7 +60,6 @@ class ReEstablishIdentityView(FormView):
         return context
 
     def get_initial(self):
-        print self.doctor
         return {'gmc': self.doctor.gmc_number}
 
     def form_valid(self, form):
@@ -71,7 +70,7 @@ class ReEstablishIdentityView(FormView):
 class DeclarationInline(InlineFormSet):
     model = models.Declaration
     form_class = forms.DeclarationForm
-    max_num = 1
+    factory_kwargs = {'max_num': 1}
 
     def get_formset_kwargs(self):
         kw = super(DeclarationInline, self).get_formset_kwargs()
@@ -82,8 +81,7 @@ class DeclarationInline(InlineFormSet):
 class PharmaBenefitInline(InlineFormSet):
     model = models.PharmaBenefit
     form_class = forms.BenefitForm
-    can_delete = False
-    extra = 3
+    factory_kwargs = {'extra': 3, 'can_delete': False}
 
     def get_formset_kwargs(self):
         kw = super(PharmaBenefitInline, self).get_formset_kwargs()
@@ -94,7 +92,7 @@ class PharmaBenefitInline(InlineFormSet):
 class OtherMedicalBenefitInline(InlineFormSet):
     model = models.OtherMedicalBenefit
     form_class = forms.BenefitForm
-    can_delete = False
+    factory_kwargs = {'can_delete':False}
     def get_formset_kwargs(self):
         kw = super(OtherMedicalBenefitInline, self).get_formset_kwargs()
         kw['queryset'] = models.OtherMedicalBenefit.objects.none()
@@ -104,7 +102,7 @@ class OtherMedicalBenefitInline(InlineFormSet):
 class FeeBenefitInline(InlineFormSet):
     model = models.FeeBenefit
     form_class = forms.BenefitForm
-    can_delete = False
+    factory_kwargs = {'can_delete': False}
     def get_formset_kwargs(self):
         kw = super(FeeBenefitInline, self).get_formset_kwargs()
         kw['queryset'] = models.FeeBenefit.objects.none()
@@ -114,7 +112,7 @@ class FeeBenefitInline(InlineFormSet):
 class GrantBenefitInline(InlineFormSet):
     model = models.GrantBenefit
     form_class = forms.BenefitForm
-    can_delete = False
+    factory_kwargs = {'can_delete': False}
     def get_formset_kwargs(self):
         kw = super(GrantBenefitInline, self).get_formset_kwargs()
         kw['queryset'] = models.GrantBenefit.objects.none()
@@ -169,17 +167,14 @@ class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
             if formset.model == models.Declaration:
                 try:
                     self.declaration = formset.new_objects[0]
-                    print self.declaration, self.declaration.pk
                 except IndexError:
                     self.declaration = models.Declaration(doctor=self.object)
                     self.declaration.save()
 
         for formset in inlines:
             for benefit in formset.new_objects:
-                print benefit
                 benefit.declaration = self.declaration
                 benefit.save()
-                print benefit.declaration, self.declaration
 
         self.link.delete()
         self.object.send_declaration_thanks()
@@ -227,17 +222,14 @@ class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
             if formset.model == models.Declaration:
                 try:
                     self.declaration = formset.new_objects[0]
-                    print self.declaration, self.declaration.pk
                 except IndexError:
                     self.declaration = models.Declaration(doctor=self.object)
                     self.declaration.save()
 
         for formset in inlines:
             for benefit in formset.new_objects:
-                print benefit
                 benefit.declaration = self.declaration
                 benefit.save()
-                print benefit.declaration, self.declaration
 
         self.link.delete()
         self.object.send_declaration_thanks()
@@ -262,8 +254,9 @@ class DoctorListView(ListView):
 
     # This is dynamic to avoid the date being process-start bounded.
     def get_queryset(self):
-        return sorted(set(
-            models.Doctor.objects.filter(
-                declaration__dt_created__lte=dt.datetime.now()-dt.timedelta(hours=1)
-                )
-            ), reverse=True)
+        an_hour_ago = dt.datetime.now()-dt.timedelta(hours=1)
+        return models.Doctor.objects.filter(
+            declaration__dt_created__lte=an_hour_ago
+        ).distinct().order_by(
+            "-declaration__dt_created"
+        )

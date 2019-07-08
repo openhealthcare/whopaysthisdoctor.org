@@ -2,7 +2,7 @@
 Admin config for Doctors app.
 """
 from django.contrib import admin
-import reversion
+from reversion.admin import VersionAdmin
 
 from doctors import models
 
@@ -18,10 +18,10 @@ class FeeBenefitInline(admin.StackedInline):
 class GrantBenefitInline(admin.StackedInline):
     model = models.GrantBenefit
 
-class DoctorAdmin(reversion.VersionAdmin):
+class DoctorAdmin(VersionAdmin):
     pass
 
-class DeclarationAdmin(reversion.VersionAdmin):
+class DeclarationAdmin(VersionAdmin):
     inlines = (PharmaBenefitInline, OtherMedicalBenefitInline,
                FeeBenefitInline, GrantBenefitInline)
     list_display = ['doctor', 'dt_created']
