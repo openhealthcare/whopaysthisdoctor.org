@@ -258,9 +258,11 @@ class DoctorListView(ListView):
             Q(detaileddeclaration=None)
         )
 
-        return qs.distinct().order_by(
-            "-detaileddeclaration__dt_created", "-declaration__dt_created"
-        )
+        # filtering by multiple related fields yields duplicates
+        # https://code.djangoproject.com/ticket/18165
+        min_time = timezone.make_aware(dt.datetime.min)
+        return sorted(list(qs), key=lambda d: d.get_latest_declaration_dt() or min_time)
+
 
 
 class SearchView(ListView):

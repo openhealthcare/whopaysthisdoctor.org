@@ -21,6 +21,23 @@ class Doctor(models.Model):
     employment_address = models.TextField()
     email = models.EmailField(blank=True, null=True)
 
+    def get_latest_declaration_dt(self):
+        detailed_declaration = self.detaileddeclaration_set.only(
+            'dt_created'
+        ).order_by("-dt_created").first()
+
+        if detailed_declaration:
+            return detailed_declaration.dt_created
+
+        declaration = self.declaration_set.only(
+            'dt_created'
+        ).order_by("-dt_created").first()
+
+        if declaration:
+            return declaration.dt_created
+
+
+
     def __unicode__(self):
         return u'{0} - {1}'.format(self.name, self.gmc_number)
 
