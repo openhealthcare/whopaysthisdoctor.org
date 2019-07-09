@@ -260,7 +260,7 @@ class DoctorListView(ListView):
         )
 
         return qs.distinct().order_by(
-            "-detaileddeclaration__dt_created", "-declaration__dt_created"
+            "name"
         )
 
 
