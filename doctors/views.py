@@ -176,8 +176,9 @@ class AbstractDeclarView():
         detailed_declaration.save()
         for work_detail_form in work_details:
             work_detail = work_detail_form.save(commit=False)
-            work_detail.declaration = detailed_declaration
-            work_detail.save()
+            if work_detail_form.is_populated():
+                work_detail.declaration = detailed_declaration
+                work_detail.save()
 
         self.link.delete()
         if not settings.SKIP_EMAIL_VERIFICATION:

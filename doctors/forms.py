@@ -121,6 +121,10 @@ class WorkDetailsForm(ModelForm):
         model = WorkDetails
         exclude = ['dt_created']
 
+    def is_populated(self):
+        fields = ["category", "institution", "job_title"]
+        return any(self.cleaned_data.get(i) for i in fields)
+
 
 DeclarationIdentityFormSet = inlineformset_factory(
     Doctor, DetailedDeclaration, form=DetailedDeclarationForm, extra=1
