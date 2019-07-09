@@ -77,6 +77,14 @@ Navbar
   background: #CBD4E0;
 }
 
+.nav input {
+   text-transform: uppercase;
+   margin-top: 10px;
+   min-width: 360px;
+   padding-left: 12px;
+   margin-left: 12px;
+}
+
 /* --------
 Content
 ----------*/
@@ -239,4 +247,12 @@ Declare Form
 
 .declaration-section {
     margin-bottom: 48px;
+}
+
+/* --------
+Search Results
+----------*/
+
+.row.search-results {
+    margin-top: 48px;
 }

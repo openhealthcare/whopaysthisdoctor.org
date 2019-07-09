@@ -387,3 +387,6 @@ class DetailedDeclaration(models.Model):
         blank=True,
         verbose_name="details"
     )
+
+    def get_absolute_url(self):
+        return reverse('doctor-detail', kwargs={'pk': self.doctor.pk})

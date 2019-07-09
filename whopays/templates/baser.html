@@ -50,6 +50,11 @@
             <li class="{% if request.resolver_match.url_name == 'about' %}current{% endif %}"><a href="/about">About</a></li>
             <li class="{% if request.resolver_match.url_name == 'contact' %}current{% endif %}"><a href="/contact">Contact</a></li>
             <li class="{% if request.resolver_match.url_name == 'doctor-list' or request.resolver_match.url_name == 'doctor-detail'  %}current{% endif %}"><a href="/doctors">Doctors</a></li>
+            <li>
+              <form action="{% url 'search' %}" method="GET">
+                <input type="text" id="q" name="q" placeholder="Search declarations" />
+              </form>
+            </li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container -->

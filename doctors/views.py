@@ -2,6 +2,8 @@
 Views relating to the register.
 """
 import datetime as dt
+from functools import reduce
+import operator
 
 from django.conf import settings
 from django.db import transaction
@@ -259,3 +261,30 @@ class DoctorListView(ListView):
         return qs.distinct().order_by(
             "-detaileddeclaration__dt_created", "-declaration__dt_created"
         )
+
+
+class SearchView(ListView):
+    model = models.DetailedDeclaration
+
+    SEARCH_FIELDS = [
+        "consultancy_details",
+        "academic_details",
+        "other_work_details",
+        "financial_details",
+        "spousal_details",
+        "sponsored_details",
+        "political_details",
+        "doctor__name",
+        "doctor__primary_employer",
+        "doctor__gmc_number",
+        "workdetails__institution"
+    ]
+
+    def get_queryset(self):
+        query_term = self.request.GET.get('q', '')
+        queryset = self.model.objects.all()
+        q_objects = [
+            Q(**{"{}__icontains".format(field): query_term})
+            for field in self.SEARCH_FIELDS
+        ]
+        return queryset.filter(reduce(operator.or_, q_objects)).distinct()

@@ -65,6 +65,11 @@ urlpatterns = [
         doctors.views.DoctorListView.as_view(),
         name='doctor-list'
     ),
+    path(
+        'search/',
+        doctors.views.SearchView.as_view(),
+        name='search'
+    ),
     path('admin/', admin.site.urls),
 ]
 
