@@ -70,7 +70,9 @@ Navbar
   background: #1A3862;
   color: #fff;
 }
-
+.navbar-default .navbar-collapse {
+    padding-left: 0px;
+}
 .navbar-default .navbar-nav li.current a {
   background: #CBD4E0;
 }
@@ -81,6 +83,10 @@ Content
 
 .content h2 {
   margin: 0 0 1em;
+}
+
+.intro-text {
+    margin-bottom: 36px;
 }
 
 /* --------
@@ -144,6 +150,10 @@ Homepage actions
 /* --------
 Doctors
 ----------*/
+
+.doctor-detail {
+    text-transform: uppercase;
+}
 
 .verified {
   background: #aaa;
@@ -214,8 +224,19 @@ input.form-control{
     margin-top: 32px;
 }
 .identifier {
-    font-weight: bold;
+    font-weight: normal;
     text-transform: uppercase;
     min-width: 160px;
     display: inline-block;
+}
+
+/* --------
+Declare Form
+----------*/
+.row .work-details {
+    margin-bottom: 48px;
+}
+
+.declaration-section {
+    margin-bottom: 48px;
 }

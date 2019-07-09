@@ -79,6 +79,17 @@ def band_validation(name, cleaned_data):
 
 
 class DetailedDeclarationForm(ModelForm):
+    for_year = forms.ChoiceField(label="Declaration period")
+
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        year_choices =  [
+            (str(i), str(i)) for i in
+            range(2010, datetime.date.today().year+1)
+        ]
+        year_choices.reverse()
+        self.fields['for_year'].choices = year_choices
+
     class Meta:
         model = DetailedDeclaration
         exclude = ['dt_created']

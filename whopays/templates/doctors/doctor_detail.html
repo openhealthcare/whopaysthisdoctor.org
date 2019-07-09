@@ -3,124 +3,131 @@
 {% load markdown_deux_tags %}
 
 {% block content %}
-  <div class="row">
-    <div class="box">
-      <div class="col-lg-12">
-        <h2 class="intro-text ">
-          {{ doctor.name }} | GMC# {{ doctor.gmc_number}}
-        </h2>
-
-        <ul class="list-unstyled identifiers">
-          <li>
-            <span class="identifier">Employer</span> {{ doctor.primary_employer }}
-          </li>
-          <li>
-            <span class="identifier">Title</span> {{ doctor.job_title }}
-          </li>
-        </ul>
-        <a href="{% url 're-establish-identity' pk=doctor.pk %}" class="btn btn-default">Add a declaration</a>
-      </div>
+  <div class="row box">
+    <div class="col-lg-12">
+      <h2 class="doctor-detail">
+        {{ doctor.name }} | GMC# {{ doctor.gmc_number}}
+      </h2>
+    </div>
+    <div class="col-md-6">
+      <ul class="list-unstyled identifiers">
+        <li>
+          {{ doctor.primary_employer }}
+        </li>
+        <li>
+          {{ doctor.job_title }}
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-3 col-md-offset-3">
+      <a href="{% url 're-establish-identity' pk=doctor.pk %}" class="btn btn-default">Add a declaration</a>
     </div>
   </div>
 
   {% if declarations %}
-  <div class="row box">
-    <div class="col-lg-12">
-      <h3 class="intro-text">Declaration History</h3>
+    <div class="row box">
+      <div class="col-lg-12">
+        <h3 class="">Declaration History</h3>
+      </div>
     </div>
-  </div>
-{% endif %}
+  {% endif %}
 
 
   {% for year, annual_decalarations in declarations.items %}
     <div class="row box">
-      <h2>{{ year }} </h2>
+      <h2 class="col-md-12">{{ year }} </h2>
       {% for declaration in annual_decalarations %}
+        <h3 class="intro-text col-md-12">Declaration {{ declaration.dt_created }}</h3>
 
-        <h3 class="intro-text">Declaration {{ declaration.dt_created }}
-          <h3> Clinical Positions</h3>
-          <ul>
-            {% for position in declaration.workdetails_set.all %}
-              <li>{{ position.position }}: {{ position.details }}</li>
-            {% endfor %}
-          </ul>
+        <div class="col-md-12">
+          {% if declaration.workdetails_set.count %}
+            <h3>Clinical Positions</h3>
+            <ul>
+              {% for position in declaration.workdetails_set.all %}
+                <li>{{ position.category }}: {{ position.institution }} {{ position.job_title }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
 
-          {% if declaration.consultancy %}
-            <h3>
-              Consultancy: {{ declaration.consultancy_band }}
-            </h3>
-          <p>
-            {{ declaration.consultancy_details }}
-          </p>
-        {% endif %}
-
-        {% if declaration.academic %}
           <h3>
-            Academic: {{ declaration.academic_band }}
+            Consultancy {% if declaration.consultancy_band %}{{ declaration.consultancy_band }}{% endif %}
           </h3>
-          <p>
-            {{ declaration.academic_details }}
-          </p>
-        {% endif %}
+          {% if declaration.consultancy_details %}
+            <p>
+              {{ declaration.consultancy_details }}
+            </p>
+          {% endif %}
 
-        {% if declaration.other_work %}
           <h3>
-            Other work: {{ declaration.other_work_band }}
+            Academic {% if declaration.academic_band %}{{ declaration.academic_band }}{% endif %}
           </h3>
-          <p>
-            {{ declaration.other_work_details }}
-          </p>
-        {% endif %}
+          {% if declaration.academic_details %}
+            <p>
+              {{ declaration.academic_details }}
+            </p>
+          {% endif %}
 
-        {% if declaration.financial %}
           <h3>
-            Financial: {{ declaration.financial_band }}
+            Other work {% if declaration.other_work_band %}{{ declaration.other_work_band }}{% endif %}
           </h3>
-          <p>
-            {{ declaration.financial_details }}
-          </p>
-        {% endif %}
+          {% if declaration.other_work_details %}
+            <p>
+              {{ declaration.other_work_details }}
+            </p>
+          {% endif %}
 
-        {% if declaration.spousal %}
           <h3>
-            Spousal: {{ declaration.spousal_band }}
+            Financial {% if declaration.financial_band %}{{ declaration.financial_band }}{% endif %}
           </h3>
-          <p>
-            {{ declaration.spousal_details }}
-          </p>
-        {% endif %}
+          {% if declaration.financial_details %}
+            <p>{{ declaration.financial_details }}</p>
+          {% endif %}
 
-        {% if declaration.sponsored %}
           <h3>
-            Sponsored: {{ declaration.sponsored_band }}
+            Spousal {% if declaration.spousal_band %}{{ declaration.spousal_band }}{% endif %}
           </h3>
-          <p>
-            {{ declaration.sponsored_details }}
-          </p>
-        {% endif %}
+          {% if declaration.spousal_details %}
+            <p>{{ declaration.spousal_details }}</p>
+          {% endif %}
 
-        {% if declaration.political %}
           <h3>
-            Political: {{ declaration.political_band }}
+            Sponsored
+            {% if declaration.sponsored_band %}
+              <p>{{ declaration.sponsored_band }}</p>
+            {% endif %}
           </h3>
-          <p>
-            {{ declaration.political_details }}
-          </p>
-        {% endif %}
+          {% if declaration.sponsored_details %}
+            <p>{{ declaration.sponsored_details }}</p>
+          {% endif %}
 
 
+          <h3>
+            Political
+            {% if declaration.political_band %}
+              {{ declaration.political_band }}
+            {% endif %}
+          </h3>
+          {% if declaration.political_details %}
+            <p>{{ declaration.political_details }}</p>
+          {% endif %}
+
+        </div>
 
     </div>
   {% endfor %}
 {% endfor %}
 
- <div class="row box">
+
+{% if doctor.declaration_set.count %}
+  <div class="row box">
     <div class="col-lg-12">
       <h3 class="intro-text">Archived Declarations</h3>
     </div>
   </div>
 
-{% include 'doctors/doctor_detail_archived.html' %}
+  {% include 'doctors/doctor_detail_archived.html' %}
 
+
+{% endif %}
 
 {% endblock %}

@@ -15,7 +15,7 @@ from doctors import send_mail
 
 class Doctor(models.Model):
     name = models.CharField(max_length=200)
-    gmc_number = models.CharField(max_length=100, unique=True)
+    gmc_number = models.CharField(max_length=100, unique=True, verbose_name="GMC Number")
     job_title = models.CharField(max_length=200)
     primary_employer = models.CharField(max_length=200)
     employment_address = models.TextField()
@@ -203,11 +203,13 @@ class WorkDetails(models.Model):
     declaration = models.ForeignKey(
         "DetailedDeclaration", on_delete=models.CASCADE
     )
-    position = models.CharField(
+    category = models.CharField(
+        verbose_name="Position type",
         choices=CAREER_CHOICES,
         max_length=256
     )
-    details = models.TextField(blank=True)
+    institution = models.CharField(max_length=200, blank=True, null=True)
+    job_title = models.CharField(max_length=200, blank=True, null=True)
 
 
 class DetailedDeclaration(models.Model):

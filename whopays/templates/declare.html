@@ -6,152 +6,169 @@
   <form method="POST" role="form" action="#">
     {% csrf_token %}
 
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <h2>Declare your interests</h2>
-          <p>
-            You are able to use this form to declare any financial interests in the last 12 months, or since your last
-            declaration, relating to income received other than from your "primary employer" given below.
-	    If in doubt, it is always best to declare income.
-          </p>
-        </div>
+    <div class="row box">
+      <div class="col-md-8">
+        <h1>Declare your interests</h1>
+        <p>
+          You are able to use this form to declare any financial interests in a 12 month period
+          relating to income received other than from your "primary employer" given below.
+        </p>
+        <p>
+	  If in doubt, it is always best to declare income.
+        </p>
       </div>
     </div>
 
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <hr />
-          <h2 class="intro-text text-center">Section 1: Identifying information</h2>
-          <hr>
-          {{ form.errors }}
-          <div class="row">
-            {{ form|bootstrap_horizontal }}
+    <div class="row box">
+      <div class="col-md-6">
+        <h2 class="">Section 1: Identifying information</h2>
+        {{ form.errors }}
+        <div class="row">
+          <div class="col-md-12">
+            {{ form|bootstrap }}
           </div>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <hr />
-          <h2 class="intro-text text-center">Section 2: Declaration period</h2>
-          <hr>
+    <div class="row box">
+      <div class="col-md-6">
+        <h2 class="">
+          Section 2: Employment Details
+        </h2>
+        {{ workdetailsinline.management_form }}
+        {% for form in workdetailsinline.forms %}
+          <div class="row work-details">
+            <div class="col-md-12">
+              {{ form.category| bootstrap }}
+              {{ form.institution | bootstrap }}
+              {{ form.job_title | bootstrap }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="row box">
+      <div class="col-md-12">
+        <h2 class="">
+          Section 3: Declaration
+        </h2>
+
+        {{ detaileddeclarationinline.management_form }}
+
+        {% for form in detaileddeclarationinline.forms %}
           <div class="row">
-            <select name="detaileddeclaration_set-0-for_year" class="form-control" id="id_detaileddeclaration_set-0-for_year">
-              <option value="2019">2019</option>
+            <div class="col-md-6">
+              {{ form.for_year | bootstrap }}
+            </div>
+            <div class="col-md-3 col-md-offset-3">
+              <button value="1"
+                      name="detaileddeclaration_set-0-nothing_to_declare" class="btn btn-default"
+                      type="submit">
+                Nothing to declare.
+              </button>
+            </div>
+          </div>
 
-              <option value="2018">2018</option>
-
-              <option value="2017">2017</option>
-
-              <option value="2016">2016</option>
-
-              <option value="2015">2015</option>
-
-              <option value="2014">2014</option>
-
-              <option value="2013">2013</option>
-
-              <option value="2012">2012</option>
-
-              <option value="2011">2011</option>
-
-              <option value="2010">2010</option>
-            </select>
+        <div class="row declaration-section">
+          <h3 class="col-md-12">
+            Consultancy
+          </h3>
+          <div class="col-md-6">
+            {{ form.pharmaceutical_companies | bootstrap }}
+            {{ form.technology_companies | bootstrap }}
+            {{ form.consultancy_other | bootstrap }}
+            {{ form.consultancy_band | bootstrap }}
+          </div>
+          <div class="col-md-6">
+            {{ form.consultancy_details | bootstrap }}
           </div>
         </div>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <hr />
-          <h2 class="intro-text text-center">
-            Section 3: Employment Details
-          </h2>
-          {{ workdetailsinline.management_form }}
-          {% for form in workdetailsinline.forms %}
-            <div class="row work-details">
-              {{ form.position| bootstrap_horizontal }}
-              {{ form.details | bootstrap_horizontal }}
-            </div>
-          {% endfor %}
+        <div class="row declaration-section">
+          <h3 class="col-md-12">
+            Academic
+          </h3>
+          <div class="col-md-6">
+            {{ form.research_grants | bootstrap }}
+            {{ form.academic_other | bootstrap }}
+            {{ form.academic_band | bootstrap }}
+          </div>
+          <div class="col-md-6">
+            {{ form.academic_details | bootstrap }}
+          </div>
         </div>
-      </div>
-    </div>
 
-    <div class="row">
-      <div class="box">
-        <div class="col-lg-12">
-          <hr />
-          <h2 class="intro-text text-center">
-            Section 3: Declarations
-          </h2>
-          <p>
-            <button value="1" name="detaileddeclaration_set-0-nothing_to_declare" class="btn btn-default" type="submit">Nothing to declare.</button>
-          </p>
-
-          {{ detaileddeclarationinline.management_form }}
-
-          {% for form in detaileddeclarationinline.forms %}
-            <div class="row">
-            {{ form.consultancy | bootstrap_horizontal }}
-            {{ form.pharmaceutical_companies | bootstrap_horizontal }}
-            {{ form.consultancy_other | bootstrap_horizontal }}
-            {{ form.consultancy_details | bootstrap_horizontal }}
-            {{ form.consultancy_band | bootstrap_horizontal }}
-            </div>
-            <div class="row">
-              {{ form.academic | bootstrap_horizontal }}
-              {{ form.research_grants | bootstrap_horizontal }}
-              {{ form.academic_other | bootstrap_horizontal }}
-              {{ form.academic_details | bootstrap_horizontal }}
-              {{ form.academic_band | bootstrap_horizontal }}
-            </div>
-
-            <div class="row">
-              {{ form.other_work | bootstrap_horizontal }}
-              {{ form.public_relations | bootstrap_horizontal }}
-              {{ form.commercial_relationships | bootstrap_horizontal }}
-              {{ form.media | bootstrap_horizontal }}
-              {{ form.other_work_details | bootstrap_horizontal }}
-              {{ form.other_work_band | bootstrap_horizontal }}
-            </div>
-
-            <div class="row">
-              {{ form.financial | bootstrap_horizontal }}
-              {{ form.patents_owned | bootstrap_horizontal }}
-              {{ form.financial_details | bootstrap_horizontal }}
-              {{ form.financial_band | bootstrap_horizontal }}
-            </div>
-
-            <div class="row">
-              {{ form.spousal | bootstrap_horizontal }}
-              {{ form.spousal_details | bootstrap_horizontal }}
-              {{ form.spousal_band | bootstrap_horizontal }}
-            </div>
-
-            <div class="row">
-              {{ form.sponsored | bootstrap_horizontal }}
-              {{ form.conferences | bootstrap_horizontal }}
-              {{ form.meals | bootstrap_horizontal }}
-              {{ form.sponsored_details | bootstrap_horizontal }}
-              {{ form.sponsored_band | bootstrap_horizontal }}
-            </div>
-
-            <div class="row">
-              {{ form.political | bootstrap_horizontal }}
-              {{ form.political_details | bootstrap_horizontal }}
-              {{ form.political_band | bootstrap_horizontal }}
-            </div>
-
-          {% endfor %}
-
+        <div class="row declaration-section">
+          <h3 class="col-md-12">
+            Other work
+          </h3>
+          <div class="col-md-6">
+            {{ form.public_relations | bootstrap }}
+            {{ form.commercial_relationships | bootstrap }}
+            {{ form.media | bootstrap }}
+            {{ form.other_work_band | bootstrap }}
+          </div>
+          <div class="col-md-6">
+            {{ form.other_work_details | bootstrap }}
+          </div>
         </div>
+
+        <div class="row declaration-section">
+          <h3 class="col-md-12">
+            Financial
+          </h3>
+          <div class="col-md-6">
+            {{ form.patents_owned | bootstrap }}
+            {{ form.shares | bootstrap }}
+            {{ form.financial_band | bootstrap }}
+          </div>
+          <div class="col-md-6">
+            {{ form.financial_details | bootstrap }}
+          </div>
+        </div>
+
+        <div class="row declaration-section">
+          <h3 class="col-md-12">
+            Spousal
+          </h3>
+          <div class="col-md-6">
+            {{ form.spousal_band | bootstrap }}
+          </div>
+          <div class="col-md-6">
+            {{ form.spousal_details | bootstrap }}
+          </div>
+        </div>
+
+        <div class="row declaration-section">
+          <h3 class="col-md-12">
+            Sponsored
+          </h3>
+          <div class="col-md-6">
+            {{ form.conferences | bootstrap }}
+            {{ form.meals | bootstrap }}
+            {{ form.sponsored_band | bootstrap }}
+          </div>
+          <div class="col-md-6">
+            {{ form.sponsored_details | bootstrap }}
+          </div>
+        </div>
+
+        <div class="row declaration-section">
+          <h3 class="col-md-12">
+            Political
+          </h3>
+          <div class="col-md-6">
+            {{ form.political_band | bootstrap }}
+          </div>
+          <div class="col-md-6">
+            {{ form.political_details | bootstrap }}
+          </div>
+        </div>
+
+        {% endfor %}
+
       </div>
     </div>
 
@@ -162,7 +179,6 @@
           <center>
             <button class="btn btn-default" type="submit">Make my declaration</button>
           </center>
-          <hr />
         </div>
       </div>
     </div>

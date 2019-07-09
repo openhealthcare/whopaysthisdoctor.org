@@ -122,123 +122,6 @@ class GrantBenefitInline(InlineFormSet):
         return kw
 
 
-# class DeclareView(NamedFormsetsMixin, CreateWithInlinesView):
-#     """
-#     Declaring your interests
-#     """
-#     template_name = 'declare.html'
-#     model = models.Doctor
-#     form_class = forms.DoctorForm
-
-#     inlines = [
-#         DeclarationInline,
-#         PharmaBenefitInline,
-#         OtherMedicalBenefitInline,
-#         FeeBenefitInline,
-#         GrantBenefitInline
-#         ]
-#     inlines_names = [
-#         'Declaration',
-#         'PharmaBenefits',
-#         'OtherMedicalBenefits',
-#         'FeeBenefits',
-#         'GrantBenefits'
-#         ]
-
-#     def dispatch(self, *args, **kwargs):
-#         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
-#         if link.expires < timezone.now():
-#             raise Http404
-#         doctor = models.Doctor.objects.filter(email=link.email).count()
-#         if doctor > 0:
-#             kwargs['pk'] = models.Doctor.objects.get(email=link.email).pk
-#             return redirect(reverse('add', kwargs=kwargs))
-#         self.link = link
-#         return super(DeclareView, self).dispatch(*args, **kwargs)
-
-#     def forms_valid(self, form, inlines):
-#         """
-#         If the form and formsets are valid, save the associated models.
-#         """
-#         self.object = form.save()
-#         self.object.email = self.link.email
-#         self.object.save()
-
-#         for formset in inlines:
-#             formset.save()
-#         for formset in inlines:
-#             if formset.model == models.Declaration:
-#                 try:
-#                     self.declaration = formset.new_objects[0]
-#                 except IndexError:
-#                     self.declaration = models.Declaration(doctor=self.object)
-#                     self.declaration.save()
-
-#         for formset in inlines:
-#             for benefit in formset.new_objects:
-#                 benefit.declaration = self.declaration
-#                 benefit.save()
-
-#         self.link.delete()
-#         self.object.send_declaration_thanks()
-#         return HttpResponseRedirect(self.get_success_url())
-
-
-# class AddDeclarationView(NamedFormsetsMixin, UpdateWithInlinesView):
-#     """
-#     Declaring your interests
-#     """
-#     template_name = 'declare.html'
-#     model = models.Doctor
-#     form_class = forms.DoctorForm
-
-#     inlines = [
-#          DeclarationInline,
-#          PharmaBenefitInline,
-#          OtherMedicalBenefitInline,
-#          FeeBenefitInline,
-#          GrantBenefitInline
-#          ]
-#     inlines_names = [
-#         'Declaration',
-#         'PharmaBenefits',
-#         'OtherMedicalBenefits',
-#         'FeeBenefits',
-#         'GrantBenefits'
-#         ]
-
-#     def dispatch(self, *args, **kwargs):
-#         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
-#         if link.expires < timezone.now():
-#             raise Http404
-#         self.link = link
-#         return super(AddDeclarationView, self).dispatch(*args, **kwargs)
-
-#     def forms_valid(self, form, inlines):
-#         """
-#         If the form and formsets are valid, save the associated models.
-#         """
-#         self.object = form.save()
-#         for formset in inlines:
-#             formset.save()
-#         for formset in inlines:
-#             if formset.model == models.Declaration:
-#                 try:
-#                     self.declaration = formset.new_objects[0]
-#                 except IndexError:
-#                     self.declaration = models.Declaration(doctor=self.object)
-#                     self.declaration.save()
-
-#         for formset in inlines:
-#             for benefit in formset.new_objects:
-#                 benefit.declaration = self.declaration
-#                 benefit.save()
-
-#         self.link.delete()
-#         self.object.send_declaration_thanks()
-#         return HttpResponseRedirect(self.get_success_url())
-
-
 class AbstractDeclarView():
     model = models.Doctor
     template_name = 'declare.html'
@@ -246,6 +129,7 @@ class AbstractDeclarView():
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
+
         if self.request.POST:
             data['detaileddeclarationinline'] = forms.DeclarationIdentityFormSet(
                 self.request.POST
