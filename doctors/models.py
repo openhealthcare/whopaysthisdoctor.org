@@ -21,8 +21,8 @@ class Doctor(models.Model):
     employment_address = models.TextField()
     email = models.EmailField(blank=True, null=True)
 
-    def __unicode__(self):
-        return u'{0} - {1}'.format(self.name, self.gmc_number)
+    def __str__(self):
+        return f'{self.name} - {self.gmc_number}'
 
     def get_absolute_url(self):
         return reverse('doctor-detail', kwargs={'pk': self.pk})
@@ -69,9 +69,8 @@ class Declaration(models.Model):
     date_created = models.DateField(default=dt.date.today)
     dt_created = models.DateTimeField(default=dt.datetime.now)
 
-    def __unicode__(self):
-        return u'{0} - {1}'.format(getattr(self, 'doctor', 'Declaration'),
-                                           self.date_created)
+    def __str__(self):
+        return f'{self.doctor} - {self.date_created}'
 
     def to_dict(self):
         return dict(
