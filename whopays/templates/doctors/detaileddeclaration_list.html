@@ -16,12 +16,11 @@
             Declaration {{ declaration.dt_created }} for <b>{{ declaration.for_year }}</b>
           </p>
           <p>
-            <a href="{{ object.get_absolute_url }}">
+            <a href="{{ declaration.get_absolute_url }}">
               View Declaration
             </a>
           </p>
         </div>
-
       </div>
     {% endfor %}
 
