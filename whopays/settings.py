@@ -189,23 +189,47 @@ DEFAULT_DOMAIN = 'www.whopaysthisdoctor.org'
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
-# Let's switch it up to Mandrill
 EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
 EMAIL_HOST= 'smtp.sendgrid.net'
+
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
 
 SKIP_EMAIL_VERIFICATION = False
 
-# EMAIL_HOST_USER = os.environ.get('MANDRILL_USERNAME', '')
-# EMAIL_HOST = 'smtp.mandrillapp.com'
-# EMAIL_PORT = 587
-# MAIL_HOST_PASSWORD = os.environ.get('MANDRILL_APIKEY', '')
 
 NHS_EMAIL_SUFFIXES = ['nhs.net', 'nhs.uk', 'hscni.net', 'ac.uk', 'doctors.org.uk', 'doctors.net.uk', 'cochrane.org']
 ADMIN_SUFFIXES = ['openhealthcare.org.uk', 'deadpansincerity.com', 'msmith.net']
 ALL_SUFFIXES = NHS_EMAIL_SUFFIXES + ADMIN_SUFFIXES
+
+V_FORMAT = '%(asctime)s %(process)d %(thread)d %(filename)s %(funcName)s \
+%(levelname)s %(message)s'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': V_FORMAT
+        }
+    },
+    'handlers': {
+        'console_detailed': {
+            'level': 'INFO',
+            'filters': [],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console_detailed'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
 
 try:
     from whopays.local_settings import *
