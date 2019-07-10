@@ -53,14 +53,18 @@ class ReEstablishIdentityForm(DeclarationIdentityForm):
     email = NHSEmailField()
     gmc = forms.CharField(widget=widgets.HiddenInput())
 
+
     def clean(self):
         super(ReEstablishIdentityForm, self).clean()
+        email = self.cleaned_data.get("email")
 
-        email, gmc = self.cleaned_data['email'], self.cleaned_data['gmc']
-        doctor = Doctor.objects.get(gmc_number=gmc)
-        if doctor.email != email:
-            raise forms.ValidationError('A different email address was used to submit declarations for that doctor in the past')
+        if email:
+            gmc = self.cleaned_data['gmc']
+            doctor = Doctor.objects.get(gmc_number=gmc)
+            if doctor.email != email:
+                raise forms.ValidationError('A different email address was used to submit declarations for that doctor in the past')
         return self.cleaned_data
+
 
 class DetailedDeclarationForm(ModelForm):
     for_year = forms.ChoiceField(label="Declaration period")
