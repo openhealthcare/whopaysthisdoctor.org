@@ -49,19 +49,13 @@ MEDIA_URL = ''
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = os.path.join(ROOT, 'assets')
+STATIC_ROOT = "static"
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
+WHITENOISE_STATIC_PREFIX = "/static/"
 
-# Additional locations of static files
-STATICFILES_DIRS = (
-    os.path.join(ROOT, 'static'),
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -195,12 +189,13 @@ DEFAULT_DOMAIN = 'www.whopaysthisdoctor.org'
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
-# Let's switch it up to Mandrill
-EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
-EMAIL_HOST= 'smtp.sendgrid.net'
+SENDGRID_API_KEY = os.getenv('SENDGRID_API_KEY')
+
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = SENDGRID_API_KEY
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
 
 SKIP_EMAIL_VERIFICATION = False
 
@@ -212,6 +207,34 @@ SKIP_EMAIL_VERIFICATION = False
 NHS_EMAIL_SUFFIXES = ['nhs.net', 'nhs.uk', 'hscni.net', 'ac.uk', 'doctors.org.uk', 'doctors.net.uk', 'cochrane.org']
 ADMIN_SUFFIXES = ['openhealthcare.org.uk', 'deadpansincerity.com', 'msmith.net']
 ALL_SUFFIXES = NHS_EMAIL_SUFFIXES + ADMIN_SUFFIXES
+
+V_FORMAT = '%(asctime)s %(process)d %(thread)d %(filename)s %(funcName)s \
+%(levelname)s %(message)s'
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': V_FORMAT
+        }
+    },
+    'handlers': {
+        'console_detailed': {
+            'level': 'INFO',
+            'filters': [],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console_detailed'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}
 
 try:
     from whopays.local_settings import *
