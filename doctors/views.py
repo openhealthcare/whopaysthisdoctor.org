@@ -124,7 +124,7 @@ class GrantBenefitInline(InlineFormSet):
         return kw
 
 
-class AbstractDeclarView():
+class AbstractDeclareView():
     model = models.Doctor
     template_name = 'declare.html'
     fields = '__all__'
@@ -186,7 +186,7 @@ class AbstractDeclarView():
         return HttpResponseRedirect(self.get_success_url())
 
 
-class DeclareView(AbstractDeclarView, CreateView):
+class DeclareView(AbstractDeclareView, CreateView):
     def dispatch(self, *args, **kwargs):
         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
         if link.expires < timezone.now():
@@ -204,7 +204,7 @@ class DeclareView(AbstractDeclarView, CreateView):
         return initial
 
 
-class AddDeclarationView(AbstractDeclarView, UpdateView):
+class AddDeclarationView(AbstractDeclareView, UpdateView):
     def dispatch(self, *args, **kwargs):
         link = get_object_or_404(models.DeclarationLink, key=kwargs['key'])
         if link.expires < timezone.now():
