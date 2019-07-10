@@ -48,7 +48,7 @@ class Doctor(models.Model):
             print("email sent")
             print("=" * 20)
         else:
-            send_mail(
+            send_mail.send_mail(
                 to_emails=[self.email],
                 subject="Who Pays This Doctor - Thanks for your declaration",
                 template="email/declaration_thanks.html",
@@ -177,7 +177,7 @@ class DeclarationLink(models.Model):
             print(self.absolute_url())
             print("=" * 20)
         else:
-            send_mail(
+            send_mail.send_mail(
                 to_emails=[self.email],
                 subject='Who Pays This Doctor - Edit your public record',
                 template="email/edit_public_record.html",
