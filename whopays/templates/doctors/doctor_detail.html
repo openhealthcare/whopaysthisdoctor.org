@@ -44,7 +44,12 @@
             <h3>Clinical Positions</h3>
             <ul>
               {% for position in declaration.workdetails_set.all %}
-                <li>{{ position.category }}: {{ position.institution }} {{ position.job_title }}</li>
+                <li>{{ position.category }}
+                  {% if position.institution or position.job_title %}:
+                  {% if position.institution %}{{ position.institution }}{% endif %}
+                  {% if position.job_title %}{{ position.job_title }}{% endif %}
+                  {% endif %}
+                </li>
               {% endfor %}
             </ul>
           {% endif %}
