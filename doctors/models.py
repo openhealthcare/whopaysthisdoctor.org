@@ -60,6 +60,9 @@ class Doctor(models.Model):
             )
         return
 
+    def get_archived_declarations(self):
+        return self.declaration_set.all().order_by('-date_created')
+
 
 class Declaration(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
