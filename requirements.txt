@@ -6,7 +6,7 @@ django-extra-views==0.6.3
 django-markdown-deux==1.0.4
 django-reversion==1.8.0
 ffs==0.0.7.4
-gunicorn==18.0
+gunicorn==19.5.0
 Jinja2==2.7.1
 letter==0.4.2
 markdown2==2.3.0
