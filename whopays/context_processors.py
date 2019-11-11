@@ -1,5 +1,5 @@
 """
-Context processors for Who Pays This Doctor
+Context processors for Sunshine UK
 """
 from django.conf import settings
 

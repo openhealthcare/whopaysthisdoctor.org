@@ -1,5 +1,5 @@
 """
-Models for Who Pays This Doctor.
+Models for Sunshine UK.
 """
 import datetime as dt
 import hashlib
@@ -50,7 +50,7 @@ class Doctor(models.Model):
         else:
             send_mail.send_mail(
                 to_emails=[self.email],
-                subject="Who Pays This Doctor - Thanks for your declaration",
+                subject="Sunshine UK - Thanks for your declaration",
                 template="email/declaration_thanks.html",
                 template_context={
                     "settings": settings,
@@ -182,7 +182,7 @@ class DeclarationLink(models.Model):
         else:
             send_mail.send_mail(
                 to_emails=[self.email],
-                subject='Who Pays This Doctor - Edit your public record',
+                subject='Sunshine UK - Edit your public record',
                 template="email/edit_public_record.html",
                 template_context={
                     "link": self,

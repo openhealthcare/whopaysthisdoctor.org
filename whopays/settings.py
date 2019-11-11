@@ -18,7 +18,7 @@ DATABASES = {'default': dj_database_url.config(default='sqlite:///whopays.sqlite
 ALLOWED_HOSTS = [
     'localhost',
     '.herokuapp.com',
-    '.whopaysthisdoctor.org'
+    '.sunshineuk.org'
     ]
 TIME_ZONE = 'UTC'
 LANGUAGE_CODE = 'en-us'
@@ -183,9 +183,9 @@ LOGGING = {
 # (Heroku requirement)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_NAME = 'XSRF-TOKEN'
-DEFAULT_FROM_EMAIL = 'hello@whopaysthisdoctor.org'
+DEFAULT_FROM_EMAIL = 'hello@sunshineuk.org'
 CONTACT_EMAIL = DEFAULT_FROM_EMAIL
-DEFAULT_DOMAIN = os.environ.get('DEFAULT_DOMAIN', 'www.whopaysthisdoctor.org')
+DEFAULT_DOMAIN = os.environ.get('DEFAULT_DOMAIN', 'www.sunshineuk.org')
 
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
