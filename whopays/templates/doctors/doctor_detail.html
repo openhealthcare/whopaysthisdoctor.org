@@ -3,162 +3,142 @@
 {% load markdown_deux_tags %}
 
 {% block content %}
-  <div class="row">
-    <div class="box">
-      <div class="col-lg-12">
-        <hr>
-        <h2 class="intro-text text-center">{{ doctor.name }}</h2>
-        <hr />
-        <center>
-        <ul class="list-unstyled">
-          <li>
-            {{ doctor.gmc_number }}
-          </li>
-          <li>
-            {{ doctor.job_title }}
-          </li>
-          <li>
-            {{ doctor.primary_employer }}
-          </li>
-        </ul>
-        </center>
-      </div>
-      <div class="col-lg-12">
-        <hr>
-        <h2 class="intro-text text-center">Declarations</h2>
-        <hr />
-        <center>
-          <a href="{% url 're-establish-identity' pk=doctor.pk %}" class="btn btn-default">Add a declaration</a>
-        </center>
-      </div>
+  <div class="row box">
+    <div class="col-lg-12">
+      <h2 class="doctor-detail">
+        {{ doctor.name }} | GMC# {{ doctor.gmc_number}}
+      </h2>
+    </div>
+    <div class="col-md-6">
+      <ul class="list-unstyled identifiers">
+        <li>
+          {{ doctor.primary_employer }}
+        </li>
+        <li>
+          {{ doctor.job_title }}
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-3 col-md-offset-3">
+      <a href="{% url 're-establish-identity' pk=doctor.pk %}" class="btn btn-default">Add a declaration</a>
     </div>
   </div>
 
-    {% for declaration in doctor.declaration_set.all %}
-      <div class="row">
-        <div class="box">
-          <div class="col-lg-12">
-            <hr>
-            <h2 class="intro-text text-center">{{ declaration.date_created }}</h2>
-            <hr />
-          </div>
-        </div>
+  {% if declarations %}
+    <div class="row box">
+      <div class="col-lg-12">
+        <h3 class="">Declaration History</h3>
       </div>
+    </div>
+  {% endif %}
 
-      <div class="row">
-        <div class="box">
-          <div class="col-lg-12">
 
-            {% if declaration.nothing_to_declare %}
-              <hr />
-              <h2 class="intro-text text-center">Nothing To Declare</h2>
-              <hr />
+  {% for year, annual_decalarations in declarations.items %}
+    <div class="row box">
+      <h2 class="col-md-12">{{ year }} </h2>
+      {% for declaration in annual_decalarations %}
+        <h3 class="intro-text col-md-12">Declaration {{ declaration.dt_created }}</h3>
+
+        <div class="col-md-12">
+          {% if declaration.workdetails_set.count %}
+            <h3>Clinical Positions</h3>
+            <ul>
+              {% for position in declaration.workdetails_set.all %}
+                <li>{{ position.category }}
+                  {% if position.institution or position.job_title %}:
+                  {% if position.institution %}{{ position.institution }}{% endif %}
+                  {% if position.job_title %}{{ position.job_title }}{% endif %}
+                  {% endif %}
+                </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+
+          <h3>
+            Consultancy {% if declaration.consultancy_band %}{{ declaration.consultancy_band }}{% endif %}
+          </h3>
+          {% if declaration.consultancy_details %}
+            <p>
+              {{ declaration.consultancy_details }}
+            </p>
+          {% endif %}
+
+          <h3>
+            Academic {% if declaration.academic_band %}{{ declaration.academic_band }}{% endif %}
+          </h3>
+          {% if declaration.academic_details %}
+            <p>
+              {{ declaration.academic_details }}
+            </p>
+          {% endif %}
+
+          <h3>
+            Other work {% if declaration.other_work_band %}{{ declaration.other_work_band }}{% endif %}
+          </h3>
+          {% if declaration.other_work_details %}
+            <p>
+              {{ declaration.other_work_details }}
+            </p>
+          {% endif %}
+
+          <h3>
+            Financial {% if declaration.financial_band %}{{ declaration.financial_band }}{% endif %}
+          </h3>
+          {% if declaration.financial_details %}
+            <p>{{ declaration.financial_details }}</p>
+          {% endif %}
+
+          <h3>
+            Spousal {% if declaration.spousal_band %}{{ declaration.spousal_band }}{% endif %}
+          </h3>
+          {% if declaration.spousal_details %}
+            <p>{{ declaration.spousal_details }}</p>
+          {% endif %}
+
+          <h3>
+            Sponsored
+            {% if declaration.sponsored_band %}
+              <p>{{ declaration.sponsored_band }}</p>
             {% endif %}
+          </h3>
+          {% if declaration.sponsored_details %}
+            <p>{{ declaration.sponsored_details }}</p>
+          {% endif %}
 
-            {% if declaration.pharmabenefit_set.count > 0 %}
-              <hr>
-              <h2 class="intro-text text-center">Benefits received from pharmaceutical companies</h2>
-              <hr />
-              <table class="table">
-                <tr>
-                  <th>Company</th>
-                  <th>Reason for receipt of fees</th>
-                  <th>Total amount received</th>
-                </tr>
-                {% for benefit in declaration.pharmabenefit_set.all %}
-                  <tr>
-                    <td>{{benefit.company}}</td>
-                    <td>{{benefit.reason}}</td>
-                    <td>{{benefit.get_band_display}}</td>
-                  </tr>
-                {% endfor %}
-              </table>
-              {% endif %}
 
-            {% if declaration.othermedicalbenefit_set.count > 0 %}
-              <hr>
-              <h2 class="intro-text text-center">Other sources of income or benefits from other organisations relevant to
-medical practice</h2>
-              <hr />
-              <table class="table">
-                <tr>
-                  <th>Company</th>
-                  <th>Reason for receipt of fees</th>
-                  <th>Total amount received</th>
-                </tr>
-                {% for benefit in declaration.othermedicalbenefit_set.all %}
-                  <tr>
-                    <td>{{benefit.company}}</td>
-                    <td>{{benefit.reason}}</td>
-                    <td>{{benefit.get_band_display}}</td>
-                  </tr>
-                {% endfor %}
-              </table>
-              {% endif %}
+          <h3>
+            Political
+            {% if declaration.political_band %}
+              {{ declaration.political_band }}
+            {% endif %}
+          </h3>
+          {% if declaration.political_details %}
+            <p>{{ declaration.political_details }}</p>
+          {% endif %}
 
-            {% if declaration.feebenefit_set.count > 0 %}
-              <hr>
-              <h2 class="intro-text text-center">Fees directly received from other medical companies</h2>
-              <hr />
-              <table class="table">
-                <tr>
-                  <th>Company</th>
-                  <th>Reason for receipt of fees</th>
-                  <th>Total amount received</th>
-                </tr>
-                {% for benefit in declaration.feebenefit_set.all %}
-                  <tr>
-                    <td>{{benefit.company}}</td>
-                    <td>{{benefit.reason}}</td>
-                    <td>{{benefit.get_band_display}}</td>
-                  </tr>
-                {% endfor %}
-              </table>
-              {% endif %}
-
-            {% if declaration.grantbenefit_set.count > 0 %}
-              <hr>
-              <h2 class="intro-text text-center">Research grants paid by private institutions to your department</h2>
-              <hr />
-              <table class="table">
-                <tr>
-                  <th>Company</th>
-                  <th>Reason for receipt of fees</th>
-                  <th>Total amount received</th>
-                </tr>
-                {% for benefit in declaration.grantbenefit_set.all %}
-                  <tr>
-                    <td>{{benefit.company}}</td>
-                    <td>{{benefit.reason}}</td>
-                    <td>{{benefit.get_band_display}}</td>
-                  </tr>
-                {% endfor %}
-              </table>
-              {% endif %}
-
-              {% if declaration.past_declarations %}
-              <hr>
-              <h2 class="intro-text text-center">Past Declarations</h2>
-              <hr />
-              <p>
-                {{ declaration.past_declarations|markdown }}
-              </p>
-              {% endif %}
-              {% if declaration.other_declarations %}
-              <hr>
-              <h2 class="intro-text text-center">Other Declarations</h2>
-              <hr />
-              <p>
-                {{ declaration.other_declarations|markdown }}
-              </p>
-              {% endif %}
-
-            </div>
-          </div>
         </div>
 
-    {% endfor %}
+        <div class="col-md-12">
+          <hr />
+          <p class="text-muted">
+            Something wrong with this declaration? Contact team&#64;sunshineuk.org to let them know.
+          </p>
+        </div>
+  {% endfor %}
+  </div>
+{% endfor %}
 
 
+{% if doctor.declaration_set.count %}
+  <div class="row box">
+    <div class="col-lg-12">
+      <h3 class="">Archived Declarations</h3>
+    </div>
+  </div>
+
+  {% include 'doctors/doctor_detail_archived.html' %}
+
+
+{% endif %}
 
 {% endblock %}

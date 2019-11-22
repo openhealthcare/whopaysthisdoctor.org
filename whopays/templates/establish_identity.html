@@ -24,7 +24,7 @@
                 {{form.email|bootstrap}}
                 <p class="small muted">
                   Only email addresses ending in  {% for suffix in NHS_EMAIL_SUFFIXES %}{{suffix}}{% if forloop.revcounter == 2 %} or {% elif forloop.revcounter > 1 %}, {% endif %}{% endfor %} can be used.<br />
-                  If you don't have access to one of those, email hello&#64;whopaysthisdoctor.org and we'll sort you out.
+                  If you don't have access to one of those, email hello&#64;sunshineuk.org and we'll sort you out.
                 </p>
                 <button class="btn btn-default" type="submit">Submit</button>
               </form>

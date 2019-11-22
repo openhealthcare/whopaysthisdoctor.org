@@ -25,8 +25,8 @@ li {
   font-size: 2em;
 }
 
-table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):after { 
-    content: " \25B4\25BE" 
+table.sortable th:not(.sorttable_sorted):not(.sorttable_sorted_reverse):after {
+    content: " \25B4\25BE"
 }
 
 /* --------
@@ -52,6 +52,10 @@ Brand
 Navbar
 ----------*/
 
+.navbar-nav {
+    margin: 0px 0px;
+}
+
 .navbar li {
   font-size: 0.9em
 }
@@ -59,16 +63,26 @@ Navbar
 .navbar-default .navbar-nav li a {
   color: #0E1217;
 }
-  
+
 .navbar-default .navbar-nav li a:hover,
 .navbar-default .navbar-nav li a:active,
 .navbar-default .navbar-nav li a:focus {
   background: #1A3862;
   color: #fff;
 }
-
+.navbar-default .navbar-collapse {
+    padding-left: 0px;
+}
 .navbar-default .navbar-nav li.current a {
   background: #CBD4E0;
+}
+
+.nav input {
+   text-transform: uppercase;
+   margin-top: 10px;
+   min-width: 360px;
+   padding-left: 12px;
+   margin-left: 12px;
 }
 
 /* --------
@@ -77,6 +91,10 @@ Content
 
 .content h2 {
   margin: 0 0 1em;
+}
+
+.intro-text {
+    margin-bottom: 36px;
 }
 
 /* --------
@@ -141,6 +159,10 @@ Homepage actions
 Doctors
 ----------*/
 
+.doctor-detail {
+    text-transform: uppercase;
+}
+
 .verified {
   background: #aaa;
   border-radius: 12px;
@@ -203,4 +225,34 @@ input.form-control{
 #no-results {
   background: #F7F3ED;
   display: none;
+}
+
+
+.identifiers {
+    margin-top: 32px;
+}
+.identifier {
+    font-weight: normal;
+    text-transform: uppercase;
+    min-width: 160px;
+    display: inline-block;
+}
+
+/* --------
+Declare Form
+----------*/
+.row .work-details {
+    margin-bottom: 48px;
+}
+
+.declaration-section {
+    margin-bottom: 48px;
+}
+
+/* --------
+Search Results
+----------*/
+
+.row.search-results {
+    margin-top: 48px;
 }

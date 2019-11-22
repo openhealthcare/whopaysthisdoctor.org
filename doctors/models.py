@@ -1,33 +1,28 @@
 """
-Models for Who Pays This Doctor.
+Models for Sunshine UK.
 """
 import datetime as dt
 import hashlib
 import random
 
 from django.conf import settings
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.db import models
 from django.utils import timezone
-import letter
 
-POSTIE = letter.DjangoPostman()
-
-class WPTDMessage(letter.Letter):
-    Postie   = POSTIE
-    From     = settings.DEFAULT_FROM_EMAIL
+from doctors import send_mail
 
 
 class Doctor(models.Model):
     name = models.CharField(max_length=200)
-    gmc_number = models.CharField(max_length=100, unique=True)
+    gmc_number = models.CharField(max_length=100, unique=True, verbose_name="GMC Number")
     job_title = models.CharField(max_length=200)
     primary_employer = models.CharField(max_length=200)
     employment_address = models.TextField()
     email = models.EmailField(blank=True, null=True)
 
-    def __unicode__(self):
-        return u'{0} - {1}'.format(self.name, self.gmc_number)
+    def __str__(self):
+        return f'{self.name} - {self.gmc_number}'
 
     def get_absolute_url(self):
         return reverse('doctor-detail', kwargs={'pk': self.pk})
@@ -48,31 +43,37 @@ class Doctor(models.Model):
         Explaining that if this is their frist submission it will not
         turn up for 24 hours, and with a link.
         """
-        class Message(WPTDMessage):
-            To       = self.email
-            Subject  = 'Who Pays This Doctor - Thanks for your declaration'
-            Template = 'email/declaration_thanks'
-            Context  = {
-                'doctor'   : self,
-                'settings' : settings,
-                'register' : reverse('doctor-list')
+        if settings.DEBUG:
+            print("=" * 20)
+            print("email sent")
+            print("=" * 20)
+        else:
+            send_mail.send_mail(
+                to_emails=[self.email],
+                subject="Sunshine UK - Thanks for your declaration",
+                template="email/declaration_thanks.html",
+                template_context={
+                    "settings": settings,
+                    "doctor": self,
+                    "register": reverse('doctor-list')
                 }
-
-        Message.send()
+            )
         return
+
+    def get_archived_declarations(self):
+        return self.declaration_set.all().order_by('-date_created')
 
 
 class Declaration(models.Model):
-    doctor = models.ForeignKey(Doctor)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     interests = models.BooleanField(default=False)
     past_declarations = models.TextField(blank=True, null=True)
     other_declarations = models.TextField(blank=True, null=True)
-    date_created = models.DateField(default=lambda: dt.date.today())
-    dt_created = models.DateTimeField(default=lambda: dt.datetime.now())
+    date_created = models.DateField(default=dt.date.today)
+    dt_created = models.DateTimeField(default=dt.datetime.now)
 
-    def __unicode__(self):
-        return u'{0} - {1}'.format(getattr(self, 'doctor', 'Declaration'),
-                                           self.date_created)
+    def __str__(self):
+        return f'{self.doctor} - {self.date_created}'
 
     def to_dict(self):
         return dict(
@@ -101,9 +102,6 @@ class Declaration(models.Model):
 class Benefit(models.Model):
     BAND_CHOICES = (
         (1, u'under \u00a3100'),
-        (2, u'\u00a3100- \u00a31000'),
-        (3, u'\u00a31000- \u00a32000'),
-        (4, u'\u00a32000 - \u00a35000'),
         (5, u'\u00a35000 - \u00a310000'),
         (6, u'\u00a310000 - \u00a350 000'),
         (7, u'\u00a350000- \u00a3100000'),
@@ -113,8 +111,11 @@ class Benefit(models.Model):
     class Meta:
         abstract = True
 
-    doctor = models.ForeignKey(Doctor)
-    declaration = models.ForeignKey(Declaration, blank=True, null=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    declaration = models.ForeignKey(
+        Declaration, blank=True, null=True,
+        on_delete=models.SET_NULL
+    )
     company = models.CharField(max_length=200)
     reason = models.CharField(max_length=200)
     band = models.IntegerField(choices=BAND_CHOICES)
@@ -135,7 +136,7 @@ def random_token(extra=None, hash_func=hashlib.sha256):
     if extra is None:
         extra = []
     bits = extra + [str(random.SystemRandom().getrandbits(512))]
-    return hash_func("".join(bits).encode('utf-8')).hexdigest()
+    return hash_func("".join(bits).encode('utf-8')).hexdigest()[:8]
 
 def in_one_day():
     now = dt.datetime.now()
@@ -151,7 +152,7 @@ def in_two_weeks():
 class DeclarationLink(models.Model):
     email = models.EmailField(unique=True)
     expires = models.DateTimeField(default=in_two_weeks)
-    key = models.CharField(max_length=64, unique=True, default=lambda: random_token()[:8])
+    key = models.CharField(max_length=64, unique=True, default=random_token)
 
     @property
     def expired(self):
@@ -174,17 +175,220 @@ class DeclarationLink(models.Model):
         """
         Send the link to this email.
         """
-        class Message(WPTDMessage):
-            To       = self.email
-            Subject  = 'Who Pays This Doctor - Edit your public record'
-            Template = 'email/edit_public_record'
-            Context  = {
-                'link'       : self,
+        if settings.DEBUG:
+            print("=" * 20)
+            print(self.absolute_url())
+            print("=" * 20)
+        else:
+            send_mail.send_mail(
+                to_emails=[self.email],
+                subject='Sunshine UK - Edit your public record',
+                template="email/edit_public_record.html",
+                template_context={
+                    "link": self,
                 }
-
-        Message.send()
+            )
 
     def new_key(self):
         self.key = random_token()[:8]
         self.save()
         return
+
+
+class WorkDetails(models.Model):
+    CAREER_CHOICES = (
+        ("Academic", "Academic"),
+        ("NHS", "NHS"),
+        ("Private clinical work", "Private clinical work")
+    )
+    dt_created = models.DateTimeField(auto_now_add=True)
+    declaration = models.ForeignKey(
+        "DetailedDeclaration", on_delete=models.CASCADE
+    )
+    category = models.CharField(
+        verbose_name="Position type",
+        choices=CAREER_CHOICES,
+        max_length=256
+    )
+    institution = models.CharField(max_length=200, blank=True, null=True)
+    job_title = models.CharField(max_length=200, blank=True, null=True)
+
+
+class DetailedDeclaration(models.Model):
+    BAND_CHOICES = (
+        (
+            u'under \u00a3100',
+            u'under \u00a3100'
+        ),
+        (
+            u'\u00a3100- \u00a31000',
+            u'\u00a3100- \u00a31000'
+        ),
+        (
+            u'\u00a31000- \u00a32000',
+            u'\u00a31000- \u00a32000'
+        ),
+        (
+            u'\u00a32000 - \u00a35000',
+            u'\u00a32000 - \u00a35000'
+        ),
+        (
+            u'\u00a35000 - \u00a310000',
+            u'\u00a35000 - \u00a310000'
+        ),
+        (
+            u'\u00a310000 - \u00a350 000',
+            u'\u00a310000 - \u00a350 000'
+        ),
+        (
+            u'\u00a350000- \u00a3100000',
+            u'\u00a350000- \u00a3100000'
+        ),
+        (
+            u'\u00a3100000+',
+            u'\u00a3100000+'
+        )
+    )
+
+    dt_created = models.DateTimeField(auto_now_add=True)
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+    for_year = models.IntegerField()
+    nothing_to_declare = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ["-for_year", "-dt_created"]
+
+    # Consultancy categories
+    consultancy = models.BooleanField(default=False)
+    consultancy_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    pharmaceutical_companies = models.BooleanField(default=False)
+    technology_companies = models.BooleanField(default=False)
+    consultancy_other = models.BooleanField(
+        default=False, verbose_name="other"
+    )
+    consultancy_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Academic categories
+    academic = models.BooleanField(
+        default=False,
+        verbose_name="academic_relationships"
+    )
+    academic_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    research_grants = models.BooleanField(default=False)
+    academic_other = models.BooleanField(default=False)
+    academic_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Other work categories
+    other_work = models.BooleanField(default=False)
+    other_work_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    public_relations = models.BooleanField(default=False)
+    commercial_relationships = models.BooleanField(default=False)
+    media = models.BooleanField(default=False)
+    other_work_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Financial categories
+    financial = models.BooleanField(default=False)
+    financial_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    patents_owned = models.BooleanField(
+        default=False, verbose_name="patents owned/part owned"
+    )
+    shares = models.BooleanField(
+        default=False, verbose_name="shares/stocks/company ownership"
+    )
+    financial_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Spousal/family
+    spousal = models.BooleanField(
+        default=False, verbose_name="spousal/family"
+    )
+    spousal_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    spousal_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # Sponsored/educational events
+    sponsored = models.BooleanField(
+        default=False,
+        verbose_name="sponsored/educational events"
+    )
+    sponsored_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    conferences = models.BooleanField(
+        default=False
+    )
+    meals = models.BooleanField(
+        default=False,
+        verbose_name="meals/hospitality/travel"
+    )
+    sponsored_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    # political affiliations
+    political = models.BooleanField(
+        default=False,
+        verbose_name="political/membership organisations of note"
+    )
+    political_band = models.CharField(
+        choices=BAND_CHOICES,
+        max_length=256,
+        blank=True,
+        null=True,
+        verbose_name="Band",
+    )
+    political_details = models.TextField(
+        blank=True,
+        verbose_name="details"
+    )
+
+    def get_absolute_url(self):
+        return reverse('doctor-detail', kwargs={'pk': self.doctor.pk})
