@@ -18,7 +18,8 @@ DATABASES = {'default': dj_database_url.config(default='sqlite:///whopays.sqlite
 ALLOWED_HOSTS = [
     'localhost',
     '.herokuapp.com',
-    '.sunshineuk.org'
+    '.sunshineuk.org',
+    '.whopaysthisdoctor.org',
     ]
 TIME_ZONE = 'UTC'
 LANGUAGE_CODE = 'en-us'
