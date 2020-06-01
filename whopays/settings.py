@@ -185,17 +185,17 @@ LOGGING = {
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_NAME = 'XSRF-TOKEN'
 DEFAULT_FROM_EMAIL = 'hello@sunshineuk.org'
-CONTACT_EMAIL = DEFAULT_FROM_EMAIL
-DEFAULT_DOMAIN = os.environ.get('DEFAULT_DOMAIN', 'www.sunshineuk.org')
+# CONTACT_EMAIL = DEFAULT_FROM_EMAIL
+# DEFAULT_DOMAIN = os.environ.get('DEFAULT_DOMAIN', 'www.sunshineuk.org')
 
-EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
+# EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND', 'django.core.mail.backends.smtp.EmailBackend')
 
-EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
-EMAIL_HOST= 'smtp.sendgrid.net'
+# EMAIL_HOST_USER = os.environ.get('SENDGRID_USERNAME', '')
+# EMAIL_HOST= 'smtp.sendgrid.net'
 
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_HOST_PASSWORD = os.environ.get('SENDGRID_PASSWORD', '')
 
 SKIP_EMAIL_VERIFICATION = False
 
