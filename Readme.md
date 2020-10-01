@@ -1,6 +1,6 @@
 ### This is the Website at Sunshineuk.org
 
-You would probably prefer to be looking at www.sunshineuk.org
+You would probably prefer to be looking at- www.sunshineuk.org
 
 ### Contributing
 
