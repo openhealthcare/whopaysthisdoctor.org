@@ -1,4 +1,4 @@
-### This is the Website at Sunshineuk.org
+### This is the Website at Sunshineuk.org - An Amazing Project
 
 You would probably prefer to be looking at www.sunshineuk.org
 
