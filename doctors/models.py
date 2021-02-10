@@ -102,10 +102,13 @@ class Declaration(models.Model):
 class Benefit(models.Model):
     BAND_CHOICES = (
         (1, u'under \u00a3100'),
+        (2, u'\u00a3100- \u00a31000'),
+        (3, u'\u00a31000- \u00a32000'),
+        (4, u'\u00a32000 - \u00a35000'),
         (5, u'\u00a35000 - \u00a310000'),
         (6, u'\u00a310000 - \u00a350 000'),
         (7, u'\u00a350000- \u00a3100000'),
-        (8, u'\u00a3100000+')
+        (8, u'\u00a3100000+'),
     )
 
     class Meta:
