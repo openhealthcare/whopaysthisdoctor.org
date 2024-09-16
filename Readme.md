@@ -1,6 +1,6 @@
-### This is the Website at WhoPaysThisDoctor.org
+### This is the Website at Sunshineuk.org
 
-You would probably prefer to be looking at www.whoPaysThisDoctor.org
+You would probably prefer to be looking at www.sunshineuk.org
 
 ### Contributing
 
