@@ -172,7 +172,7 @@ class DeclarationLink(models.Model):
         self.save()
 
     def absolute_url(self):
-        return 'http://{0}/declare/{1}'.format(settings.DEFAULT_DOMAIN, self.key)
+        return 'https://{0}/declare/{1}'.format(settings.DEFAULT_DOMAIN, self.key)
 
     def send(self):
         """
