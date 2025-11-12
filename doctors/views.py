@@ -180,7 +180,7 @@ class AbstractDeclareView():
                 work_detail.declaration = detailed_declaration
                 work_detail.save()
 
-        self.link.delete()
+        #self.link.delete()
         if not settings.SKIP_EMAIL_VERIFICATION:
             self.object.send_declaration_thanks()
         return HttpResponseRedirect(self.get_success_url())
